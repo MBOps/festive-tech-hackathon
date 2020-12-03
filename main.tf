@@ -28,8 +28,21 @@ resource "azurerm_app_service_plan" "asp" {
     kind                = "Windows"
 
     sku {
-        tier = "Free"
-        size = "F1"
+        tier = "Standard"
+        size = "S1"
+    }
+}
+
+resource "azurerm_app_service_plan" "asp" {
+    count               = length(var.webapplocations)
+    name                = "${var.resource_prefix}-${var.webapplocations[count.index]}-asp"
+    location            = var.webapplocations[count.index]
+    resource_group_name = azurerm_resource_group.rg.name
+    kind                = "Windows"
+
+    sku {
+        tier = "Standard"
+        size = "S1"
     }
 }
 
@@ -41,7 +54,7 @@ resource "azurerm_app_service" "webapp" {
     app_service_plan_id = azurerm_app_service_plan.asp.id
 
     site_config {
-        #always_on           = true
+        always_on           = true
         default_documents   = [
             "Default.htm",
             "Default.html",
