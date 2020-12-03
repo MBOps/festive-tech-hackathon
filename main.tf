@@ -21,7 +21,7 @@ resource "azurerm_resource_group" "rg" {
 }
 
 # Provision the App Service plan to host the App Service web app in each region
-resource "azurerm_app_service_plan" "asparray" {
+resource "azurerm_app_service_plan" "asp" {
     count               = length(var.webapplocations)
     name                = "${var.resource_prefix}-${var.webapplocations[count.index]}-asp"
     location            = var.webapplocations[count.index]
