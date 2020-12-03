@@ -21,41 +21,41 @@ resource "azurerm_resource_group" "rg" {
 }
 
 # Provision the App Service plan to host the App Service web app in each region
-resource "azurerm_app_service_plan" "asp" {
-    count               = length(var.webapplocations)
-    name                = "${var.resource_prefix}-${var.webapplocations[count.index]}-asp"
-    location            = var.webapplocations[count.index]
-    resource_group_name = azurerm_resource_group.rg.name
-    kind                = "Windows"
+# resource "azurerm_app_service_plan" "asp" {
+#     count               = length(var.webapplocations)
+#     name                = "${var.resource_prefix}-${var.webapplocations[count.index]}-asp"
+#     location            = var.webapplocations[count.index]
+#     resource_group_name = azurerm_resource_group.rg.name
+#     kind                = "Windows"
 
-    sku {
-        tier = "Standard"
-        size = "S1"
-    }
-}
+#     sku {
+#         tier = "Standard"
+#         size = "S1"
+#     }
+# }
 
-# Provision the Azure App Service to host the main web site
-resource "azurerm_app_service" "webapp" {
-    count               = length(var.webapplocations)
-    name                = "${var.resource_prefix}-${var.webapplocations[count.index]}-webapp"
-    location            = var.webapplocations[count.index]
-    resource_group_name = azurerm_resource_group.rg.name
-    app_service_plan_id = azurerm_app_service_plan.asp[count.index].id
+# # Provision the Azure App Service to host the main web site
+# resource "azurerm_app_service" "webapp" {
+#     count               = length(var.webapplocations)
+#     name                = "${var.resource_prefix}-${var.webapplocations[count.index]}-webapp"
+#     location            = var.webapplocations[count.index]
+#     resource_group_name = azurerm_resource_group.rg.name
+#     app_service_plan_id = azurerm_app_service_plan.asp[count.index].id
 
-    site_config {
-        always_on           = true
-        default_documents   = [
-            "Default.htm",
-            "Default.html",
-            "hostingstart.html"
-        ]
-    }
+#     site_config {
+#         always_on           = true
+#         default_documents   = [
+#             "Default.htm",
+#             "Default.html",
+#             "hostingstart.html"
+#         ]
+#     }
 
-    app_settings = {
-        "storageContainerName"          = ""
-        "connectionString "             = ""
-    }
-}
+#     app_settings = {
+#         "storageContainerName"          = ""
+#         "connectionString "             = ""
+#     }
+# }
 
 resource "azurerm_storage_account" "storage" {
     count                    = length(var.webapplocations)
