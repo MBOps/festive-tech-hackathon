@@ -41,7 +41,7 @@ resource "azurerm_app_service" "webapp" {
     app_service_plan_id = azurerm_app_service_plan.asp.id
 
     site_config {
-        always_on           = true
+        #always_on           = true
         default_documents   = [
             "Default.htm",
             "Default.html",
