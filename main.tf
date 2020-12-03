@@ -20,19 +20,7 @@ resource "azurerm_resource_group" "rg" {
     location        = var.rglocation
 }
 
-# Provision the App Service plan to host the App Service web app
-resource "azurerm_app_service_plan" "asp" {
-    name                = "${var.resource_prefix}-asp"
-    location            = azurerm_resource_group.rg.location
-    resource_group_name = azurerm_resource_group.rg.name
-    kind                = "Windows"
-
-    sku {
-        tier = "Standard"
-        size = "S1"
-    }
-}
-
+# Provision the App Service plan to host the App Service web app in each region
 resource "azurerm_app_service_plan" "asparray" {
     count               = length(var.webapplocations)
     name                = "${var.resource_prefix}-${var.webapplocations[count.index]}-asp"
@@ -48,8 +36,9 @@ resource "azurerm_app_service_plan" "asparray" {
 
 # Provision the Azure App Service to host the main web site
 resource "azurerm_app_service" "webapp" {
-    name                = "${var.resource_prefix}-webapp"
-    location            = azurerm_resource_group.rg.location
+    count               = length(var.webapplocations)
+    name                = "${var.resource_prefix}-${var.webapplocations[count.index]}-webapp"
+    location            = var.webapplocations[count.index]
     resource_group_name = azurerm_resource_group.rg.name
     app_service_plan_id = azurerm_app_service_plan.asp.id
 
@@ -69,11 +58,11 @@ resource "azurerm_app_service" "webapp" {
 }
 
 resource "azurerm_storage_account" "storage" {
-  name                     = replace(lower("${var.resource_prefix}-storage"), "-", "")
-  location                 = azurerm_resource_group.rg.location
-  resource_group_name      = azurerm_resource_group.rg.name
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
+    count                    = length(var.webapplocations)
+    name                     = replace(lower("${var.resource_prefix}-${var.webapplocations[count.index]}-storage"), "-", "")
+    location                 = var.webapplocations[count.index]
+    resource_group_name      = azurerm_resource_group.rg.name
+    account_tier             = "Standard"
+    account_replication_type = "LRS"
 }
-
 

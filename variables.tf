@@ -11,7 +11,8 @@ variable "rglocation" {
 variable "webapplocations" {
   description = "array of locations for webapps"
   type        = list(string)
-  default     = ["northeurope", "uksouth", "westeurope"]
+#  default     = ["northeurope", "uksouth", "westeurope"]
+  default     = ["northeurope"]
 }
  
 variable "subscription_id" {
