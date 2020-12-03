@@ -33,7 +33,7 @@ resource "azurerm_app_service_plan" "asp" {
     }
 }
 
-resource "azurerm_app_service_plan" "asp" {
+resource "azurerm_app_service_plan" "asparray" {
     count               = length(var.webapplocations)
     name                = "${var.resource_prefix}-${var.webapplocations[count.index]}-asp"
     location            = var.webapplocations[count.index]
