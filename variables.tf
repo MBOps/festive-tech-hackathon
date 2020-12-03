@@ -106,7 +106,7 @@ variable "repo_url" {
     "asia-south-east"  = "ase"
     "asia-east"        = "ae"
     "aus-east"         = "aue"
-    "aus-south"        = "ause"
+    "aus-south"        = "aus"
     "aus-central"      = "auc"
     "aus-central-2"    = "auc2"
     "cn-east"          = "cne"
@@ -124,5 +124,9 @@ variable "repo_url" {
     "saf-north"        = "san"
     "uae-central"      = "uaec"
     "uae-north"        = "uaen"
+
+    ch-north         = "chn"
+    ch-east          = "che"
+    aus-south-east   = "ause"
   }
   } 
