@@ -29,8 +29,8 @@ resource "azurerm_app_service_plan" "asp" {
     kind                = "Windows"
 
     sku {
-        tier = "Free"
-        size = "F1"
+        tier = "Shared"
+        size = "D1"
     }
 }
 
