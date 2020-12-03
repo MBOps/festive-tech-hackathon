@@ -40,7 +40,7 @@ resource "azurerm_app_service" "webapp" {
     name                = "${var.resource_prefix}-${var.webapplocations[count.index]}-webapp"
     location            = var.webapplocations[count.index]
     resource_group_name = azurerm_resource_group.rg.name
-    app_service_plan_id = azurerm_app_service_plan.asp.id
+    app_service_plan_id = azurerm_app_service_plan.asp[count.index].id
 
     site_config {
         always_on           = true
