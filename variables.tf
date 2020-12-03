@@ -3,11 +3,15 @@ variable "resource_prefix" {
   default     = "Festive-Tech"
 }
 
-variable "location" {
-  description = "The Azure location where all resources in this example should be created"
+variable "rglocation" {
+  description = "The Azure location for the Resource Group"
   default     = "northeurope"
 }
 
+variable "webapplocations" {
+  description = "array of locations for webapps"
+}
+ 
 variable "subscription_id" {
   description = "Azure Subscription ID to be used for billing"
 }

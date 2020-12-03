@@ -17,7 +17,7 @@ provider "azurerm" {
 # Provision a resource group to hold all Azure resources
 resource "azurerm_resource_group" "rg" {
     name            = "${var.resource_prefix}-RG"
-    location        = var.location
+    location        = var.rglocation
 }
 
 # Provision the App Service plan to host the App Service web app
