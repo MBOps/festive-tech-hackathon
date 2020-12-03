@@ -65,7 +65,7 @@ resource "azurerm_storage_account" "storage" {
     account_tier             = "Standard"
     account_replication_type = "LRS"
 }
-resource "azurerm_storage_account" "storage" {
+resource "azurerm_storage_account" "storage2" {
     for_each = var.regions
     name                     = replace(lower("${var.resource_prefix}-${var.short_names[each.value]}-sa2"), "-", "")
     location                 = each.value
