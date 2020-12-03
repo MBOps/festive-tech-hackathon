@@ -57,17 +57,17 @@ resource "azurerm_resource_group" "rg" {
 #     }
 # }
 
-resource "azurerm_storage_account" "storage" {
-    count                    = length(var.webapplocations)
-    name                     = replace(lower("${var.resource_prefix}-${var.webapplocations[count.index]}-sa"), "-", "")
-    location                 = var.webapplocations[count.index]
-    resource_group_name      = azurerm_resource_group.rg.name
-    account_tier             = "Standard"
-    account_replication_type = "LRS"
-}
+# resource "azurerm_storage_account" "storage" {
+#     count                    = length(var.webapplocations)
+#     name                     = replace(lower("${var.resource_prefix}-${var.webapplocations[count.index]}-sa"), "-", "")
+#     location                 = var.webapplocations[count.index]
+#     resource_group_name      = azurerm_resource_group.rg.name
+#     account_tier             = "Standard"
+#     account_replication_type = "LRS"
+# }
 resource "azurerm_storage_account" "storage2" {
-    for_each = var.regions
-    name                     = replace(lower("${var.resource_prefix}-${var.short_names[each.key]}-sa2"), "-", "")
+    for_each = var.regionstest
+    name                     = replace(lower("${var.resource_prefix}-${var.short_names[each.key]}-sa"), "-", "")
     location                 = each.value
     resource_group_name      = azurerm_resource_group.rg.name
     account_tier             = "Standard"
