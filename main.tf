@@ -21,51 +21,43 @@ resource "azurerm_resource_group" "rg" {
 }
 
 # Provision the App Service plan to host the App Service web app in each region
-# resource "azurerm_app_service_plan" "asp" {
-#     count               = length(var.webapplocations)
-#     name                = "${var.resource_prefix}-${var.webapplocations[count.index]}-asp"
-#     location            = var.webapplocations[count.index]
-#     resource_group_name = azurerm_resource_group.rg.name
-#     kind                = "Windows"
+resource "azurerm_app_service_plan" "asp" {
+    for_each = var.regionstest
+    name                = "${var.resource_prefix}-${var.short_names[each.key]}-asp"
+    location            = each.value
+    resource_group_name = azurerm_resource_group.rg.name
+    kind                = "Windows"
 
-#     sku {
-#         tier = "Standard"
-#         size = "S1"
-#     }
-# }
+    sku {
+        tier = "Standard"
+        size = "S1"
+    }
+}
 
-# # Provision the Azure App Service to host the main web site
-# resource "azurerm_app_service" "webapp" {
-#     count               = length(var.webapplocations)
-#     name                = "${var.resource_prefix}-${var.webapplocations[count.index]}-webapp"
-#     location            = var.webapplocations[count.index]
-#     resource_group_name = azurerm_resource_group.rg.name
-#     app_service_plan_id = azurerm_app_service_plan.asp[count.index].id
+# Provision the Azure App Service to host the main web site
+resource "azurerm_app_service" "webapp" {
+    for_each = var.regionstest
+    name                = "${var.resource_prefix}-${var.short_names[each.key]}-webapp"
+    location            = each.value
+    resource_group_name = azurerm_resource_group.rg.name
+    app_service_plan_id = azurerm_app_service_plan.asp[each.key].id
 
-#     site_config {
-#         always_on           = true
-#         default_documents   = [
-#             "Default.htm",
-#             "Default.html",
-#             "hostingstart.html"
-#         ]
-#     }
+    site_config {
+        always_on           = true
+        default_documents   = [
+            "Default.htm",
+            "Default.html",
+            "hostingstart.html"
+        ]
+    }
 
-#     app_settings = {
-#         "storageContainerName"          = ""
-#         "connectionString "             = ""
-#     }
-# }
+    app_settings = {
+        "storageContainerName"          = ""
+        "connectionString "             = ""
+    }
+}
 
-# resource "azurerm_storage_account" "storage" {
-#     count                    = length(var.webapplocations)
-#     name                     = replace(lower("${var.resource_prefix}-${var.webapplocations[count.index]}-sa"), "-", "")
-#     location                 = var.webapplocations[count.index]
-#     resource_group_name      = azurerm_resource_group.rg.name
-#     account_tier             = "Standard"
-#     account_replication_type = "LRS"
-# }
-resource "azurerm_storage_account" "storage2" {
+resource "azurerm_storage_account" "storage" {
     for_each = var.regionstest
     name                     = replace(lower("${var.resource_prefix}-${var.short_names[each.key]}-sa"), "-", "")
     location                 = each.value
