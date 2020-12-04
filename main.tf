@@ -52,8 +52,8 @@ resource "azurerm_app_service" "webapp" {
     # }
 
     app_settings = {
-        "storageContainerName"          = ""
-        "connectionString "             = replace(lower("${var.resource_prefix}-${var.short_names[each.key]}-sa"), "-", ""
+        "storageContainerName"          = tostring(replace(lower("${var.resource_prefix}-${var.short_names[each.key]}-sa"), "-", "")
+        "connectionString "             = ""
     }
 }
 
