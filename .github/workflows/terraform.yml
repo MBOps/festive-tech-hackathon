@@ -66,15 +66,15 @@ jobs:
 #        name: whaakman/festive-tech-santa-wishlist
         repository: 'whaakman/festive-tech-santa-wishlist'
    
-    # - uses: azure/login@v1
-    #   with:
-    #     #creds: ${{ secrets.AZURE_CREDENTIALS }}
-    #     creds: '{
-    #       "clientId":"${{ secrets.CLIENT_ID }}",
-    #       "clientSecret":"${{ secrets.CLIENT_SECRET }}",
-    #       "subscriptionId":"${{ secrets.SUBSCRIPTION_ID }}",
-    #       "tenantId":"${{ secrets.TENANT_ID }}"
-    #       }'
+    - uses: azure/login@v1
+      with:
+        #creds: ${{ secrets.AZURE_CREDENTIALS }}
+        creds: '{
+          "clientId":"${{ secrets.CLIENT_ID }}",
+          "clientSecret":"${{ secrets.CLIENT_SECRET }}",
+          "subscriptionId":"${{ secrets.SUBSCRIPTION_ID }}",
+          "tenantId":"${{ secrets.TENANT_ID }}"
+          }'
 
   #   - name: Use Node.js
   #     uses: actions/setup-node@v1
