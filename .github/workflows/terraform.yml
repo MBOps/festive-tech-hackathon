@@ -12,7 +12,7 @@ env:
   ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
-  
+  AZURE_WEBAPP_PACKAGE_PATH: .
 
 jobs:
   terraform:
@@ -79,22 +79,13 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '5.0'
-    
-    # - name: 'Run dotnet build'
-    #   shell: bash
-    #   working-directory: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
-    #   run: |
-    #     # pushd ./Source
-    #     dotnet build --configuration Release --output ./output
-    #     dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}' 
-    #     # popd
 
     - name: 'Run dotnet build'
       shell: bash
-      #working-directory: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+      working-directory: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
       run: |
         dotnet build --configuration Release
-        dotnet publish -c Release -o ./myapp
+        dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
             
     # deploy web app using Azure credentials
     - uses: azure/webapps-deploy@v2
