@@ -52,9 +52,10 @@ resource "azurerm_app_service" "webapp" {
     # }
 
     app_settings = {
-        "storageContainerName"          = ""
+        "storageContainerName"          = "${var.resource_prefix}-${var.short_names[each.key]}"
         "connectionString "             = ""
     }
+    dependson = replace(lower("${var.resource_prefix}-${var.short_names[each.key]}-sa"), "-", "")
 }
 
 resource "azurerm_storage_account" "storage" {
