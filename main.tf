@@ -32,10 +32,6 @@ resource "azurerm_app_service_plan" "asp" {
         tier = "Free"
         size = "F1"
     }
-    #     sku {
-    #     tier = "Standard"
-    #     size = "S1"
-    # }
 }
 
 # Provision the Azure App Service to host the main web site
