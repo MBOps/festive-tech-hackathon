@@ -63,8 +63,8 @@ jobs:
     - name: 'Checkout GitHub Action' 
       uses: actions/checkout@master
       with:
-        name: whaakman/festive-tech-santa-wishlist
-#        repository: 'https://github.com/whaakman/festive-tech-santa-wishlist'
+#        name: whaakman/festive-tech-santa-wishlist
+        repository: 'https://github.com/whaakman/festive-tech-santa-wishlist'
    
     # - uses: azure/login@v1
     #   with:
