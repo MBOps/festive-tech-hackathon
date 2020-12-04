@@ -46,14 +46,14 @@ resource "azurerm_app_service" "webapp" {
     resource_group_name = azurerm_resource_group.rg.name
     app_service_plan_id = azurerm_app_service_plan.asp[each.key].id
 
-    site_config {
+    # site_config {
         # always_on           = true
         # default_documents   = [
         #     "Default.htm",
         #     "Default.html",
         #     "hostingstart.html"
         # ]
-    }
+    # }
 
     app_settings = {
         "storageContainerName"          = "${var.resource_prefix}-${var.short_names[each.key]}"
