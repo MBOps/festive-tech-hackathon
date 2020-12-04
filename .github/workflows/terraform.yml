@@ -100,7 +100,7 @@ jobs:
     - uses: azure/webapps-deploy@v2
       with:
         app-name: 'Festive-Tech-uks-webapp'
-        package: './myapp'
+        package: './publish'
 
     # Azure logout 
     - name: logout
