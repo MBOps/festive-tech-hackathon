@@ -96,11 +96,11 @@ jobs:
         dotnet build --configuration Release
         dotnet publish -c Release -o dotnetcorewebapp 
             
-  #   # deploy web app using Azure credentials
-  #   - uses: azure/webapps-deploy@v2
-  #     with:
-  #       app-name: 'Azure-Eats-WebApp'
-  #       package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+    # deploy web app using Azure credentials
+    - uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'Festive-Tech-uks-webapp'
+        package: 'dotnetcorewebapp/myapp'
 
     # Azure logout 
     - name: logout
