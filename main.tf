@@ -55,7 +55,7 @@ resource "azurerm_app_service" "webapp" {
         "storageContainerName"          = "${var.resource_prefix}-${var.short_names[each.key]}"
         "connectionString "             = "${azurerm_storage_account.storage[each.key].primary_connection_string}"
     }
-    depends_on = [azurerm_storage_account.storage, azurerm_app_service.webapp]
+    depends_on = [azurerm_storage_account.storage, azurerm_app_service_plan.asp]
     
 }
 
