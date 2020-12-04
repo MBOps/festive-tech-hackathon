@@ -1,6 +1,6 @@
 variable "resource_prefix" {
   description = "The prefix used for all resources in this example"
-  default     = "Festive-Tech"
+  default     = "festive-tech"
 }
 
 variable "rglocation" {
