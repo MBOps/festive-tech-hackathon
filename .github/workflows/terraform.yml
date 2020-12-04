@@ -76,24 +76,20 @@ jobs:
           "tenantId":"${{ secrets.TENANT_ID }}"
           }'
 
-  #   - name: Use Node.js
-  #     uses: actions/setup-node@v1
-  #     with:
-  #       node-version: 10.15.2
-        
-  #   - name: Setup Dotnet 2.2.300
-  #     uses: actions/setup-dotnet@v1
-  #     with:
-  #       dotnet-version: '2.2.300'
     
-  #   - name: 'Run dotnet build'
-  #     shell: bash
-  #     working-directory: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
-  #     run: |
-  #       # pushd ./Source
-  #       dotnet build --configuration Release --output ./output
-  #       dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}' 
-  #       # popd
+    - name: Setup Dotnet 2.2.300
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '2.2.300'
+    
+    - name: 'Run dotnet build'
+      shell: bash
+      working-directory: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+      run: |
+        # pushd ./Source
+        dotnet build --configuration Release --output ./output
+        dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}' 
+        # popd
             
   #   # deploy web app using Azure credentials
   #   - uses: azure/webapps-deploy@v2
@@ -101,7 +97,7 @@ jobs:
   #       app-name: 'Azure-Eats-WebApp'
   #       package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
 
-  #   # Azure logout 
-  #   - name: logout
-  #     run: |
-  #       az logout
+    # Azure logout 
+    - name: logout
+      run: |
+        az logout
