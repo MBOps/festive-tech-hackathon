@@ -53,7 +53,7 @@ resource "azurerm_app_service" "webapp" {
 
     app_settings = {
         "storageContainerName"          = "${var.resource_prefix}-${var.short_names[each.key]}"
-        "connectionString "             = "${azurerm_app_service_plan.asp[each.key].primary_connection_string}"
+        "connectionString "             = "${azurerm_app_service.webapp[each.key].primary_connection_string}"
     }
 }
 
