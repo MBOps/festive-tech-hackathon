@@ -80,7 +80,7 @@ jobs:
       with:
         dotnet-version: '5.0'
 
-    - name: 'Run dotnet build'
+    - name: 'Run dotnet build and publish'
       shell: bash
       working-directory: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
       run: |
