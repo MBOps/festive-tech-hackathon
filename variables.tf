@@ -29,14 +29,14 @@ variable "repo_url" {
   default = "https://github.com/whaakman/festive-tech-santa-wishlist"
 }
 
-  variable "regions" {
+  variable "regionstest" {
   default = {
     uk-south         = "UK South"
     eu-north         = "North Europe"
   }
   }
 
-  variable "regionstest" {
+  variable "regions" {
   default = {
     us-west          = "West US"
     us-west-2        = "West US 2"
