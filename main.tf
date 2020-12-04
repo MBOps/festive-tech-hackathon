@@ -16,7 +16,7 @@ provider "azurerm" {
 
 # Provision a resource group to hold all Azure resources
 resource "azurerm_resource_group" "rg" {
-    name            = "${var.resource_prefix}-RG"
+    name            = "${var.resource_prefix}-rg"
     location        = var.rglocation
 }
 
@@ -51,10 +51,10 @@ resource "azurerm_app_service" "webapp" {
     #     ]
     # }
 
-    # app_settings = {
-    #     "storageContainerName"          = ""
-    #     "connectionString "             = ""
-    # }
+    app_settings = {
+        "storageContainerName"          = ""
+        "connectionString "             = replace(lower("${var.resource_prefix}-${var.short_names[each.key]}-sa"), "-", ""
+    }
 }
 
 resource "azurerm_storage_account" "storage" {
