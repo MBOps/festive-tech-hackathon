@@ -28,9 +28,13 @@ resource "azurerm_app_service_plan" "asp" {
     resource_group_name = azurerm_resource_group.rg.name
     kind                = "Windows"
 
-    sku {
-        tier = "Free"
-        size = "F1"
+    # sku {
+    #     tier = "Free"
+    #     size = "F1"
+    # }
+        sku {
+        tier = "Standard"
+        size = "S1"
     }
 }
 
