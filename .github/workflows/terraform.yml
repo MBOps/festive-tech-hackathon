@@ -95,10 +95,8 @@ jobs:
       shell: bash
       working-directory: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
       run: |
-        # pushd ./Source
         dotnet build --configuration Release
-        dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}' 
-        # popd
+#        dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}' 
             
   #   # deploy web app using Azure credentials
   #   - uses: azure/webapps-deploy@v2
