@@ -94,13 +94,13 @@ jobs:
       #working-directory: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
       run: |
         dotnet build --configuration Release
-        dotnet publish -c Release 
+        dotnet publish -c Release -o ./myapp
             
     # deploy web app using Azure credentials
     - uses: azure/webapps-deploy@v2
       with:
         app-name: 'Festive-Tech-uks-webapp'
-        package: '/bin/Release/net5.0/publish/'
+        package: './myapp'
 
     # Azure logout 
     - name: logout
