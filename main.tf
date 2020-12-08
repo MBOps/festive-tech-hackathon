@@ -68,7 +68,7 @@ resource "azurerm_storage_account" "storage" {
     account_replication_type = "GRS"
 }
 
-resource "azurerm_frontdoor" "example" {
+resource "azurerm_frontdoor" "frontdoor" {
   name                                         = "${var.resource_prefix}-frontdoor"
   location                                     = "Global"
   resource_group_name                          = azurerm_resource_group.rg.name
@@ -108,7 +108,7 @@ resource "azurerm_frontdoor" "example" {
 
   frontend_endpoint {
     name                              = "exampleFrontendEndpoint1"
-    host_name                         = "example-FrontDoor.azurefd.net"
+    host_name                         = "${var.resource_prefix}-frontdoor.azurefd.net"
     custom_https_provisioning_enabled = false
   }
 }
