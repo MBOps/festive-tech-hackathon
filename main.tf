@@ -69,7 +69,6 @@ resource "azurerm_storage_account" "storage" {
 }
 
 resource "azurerm_frontdoor" "frontdoor" {
-  for_each = var.regionstest
   name                                         = "${var.resource_prefix}-frontdoor"
   location                                     = "Global"
   resource_group_name                          = azurerm_resource_group.rg.name
@@ -95,6 +94,7 @@ resource "azurerm_frontdoor" "frontdoor" {
   }
 
   backend_pool {
+    for_each = var.regionstest
     name = "exampleBackendBing"
     backend {
       host_header = "${var.resource_prefix}-${var.short_names[each.key]}-webapp.azurewebsites.net"
