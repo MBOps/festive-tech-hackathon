@@ -95,12 +95,16 @@ resource "azurerm_frontdoor" "frontdoor" {
 
   backend_pool {
     name = "exampleBackendBing"
+    
     dynamic backend {
       for_each = var.regionstest
-      host_header = "${var.resource_prefix}-${var.short_names[each.key]}-webapp.azurewebsites.net"
-      address     = "${var.resource_prefix}-${var.short_names[each.key]}-webapp.azurewebsites.net"
-      http_port   = 80
-      https_port  = 443
+
+      content {
+        host_header = "${var.resource_prefix}-${var.short_names[each.key]}-webapp.azurewebsites.net"
+        address     = "${var.resource_prefix}-${var.short_names[each.key]}-webapp.azurewebsites.net"
+        http_port   = 80
+        https_port  = 443
+      }
     }
 
     load_balancing_name = "exampleLoadBalancingSettings1"
