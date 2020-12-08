@@ -94,9 +94,9 @@ resource "azurerm_frontdoor" "frontdoor" {
   }
 
   backend_pool {
-    for_each = var.regionstest
     name = "exampleBackendBing"
-    backend {
+    dynamic backend {
+      for_each = var.regionstest
       host_header = "${var.resource_prefix}-${var.short_names[each.key]}-webapp.azurewebsites.net"
       address     = "${var.resource_prefix}-${var.short_names[each.key]}-webapp.azurewebsites.net"
       http_port   = 80
