@@ -70,7 +70,7 @@ resource "azurerm_storage_account" "storage" {
 
 resource "azurerm_frontdoor" "example" {
   name                                         = "${var.resource_prefix}-frontdoor"
-  location                                     = azurerm_resource_group.rg.location
+  location                                     = "Global"
   resource_group_name                          = azurerm_resource_group.rg.name
   enforce_backend_pools_certificate_name_check = false
 
