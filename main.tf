@@ -100,8 +100,8 @@ resource "azurerm_frontdoor" "frontdoor" {
       for_each = var.regionstest
 
       content {
-        host_header = "${var.resource_prefix}-${var.short_names[each.key]}-webapp.azurewebsites.net"
-        address     = "${var.resource_prefix}-${var.short_names[each.key]}-webapp.azurewebsites.net"
+        host_header = "${var.resource_prefix}-${var.short_names[backend.key]}-webapp.azurewebsites.net"
+        address     = "${var.resource_prefix}-${var.short_names[backend.key]}-webapp.azurewebsites.net"
         http_port   = 80
         https_port  = 443
       }
