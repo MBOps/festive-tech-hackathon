@@ -125,7 +125,7 @@ resource "azurerm_storage_account" "storage" {
 #   depends_on = [azurerm_app_service.webapp]
 # }
 
-resource "azurerm_app_service" "dockerapp" {
+resource "azurerm_app_service" "webapp" {
   for_each = var.regionstest
   name                = "${var.resource_prefix}-${var.short_names[each.key]}-dockerapp"
   location            = each.value
@@ -136,8 +136,8 @@ resource "azurerm_app_service" "dockerapp" {
   app_settings = {
     #WEBSITES_ENABLE_APP_SERVICE_STORAGE = false
 
-    # "storageContainerName"          = "${var.resource_prefix}-${var.short_names[each.key]}"
-    # "connectionString "             = "${azurerm_storage_account.storage[each.key].primary_connection_string}"
+    "storageContainerName"          = "${var.resource_prefix}-${var.short_names[each.key]}"
+    "connectionString "             = "${azurerm_storage_account.storage[each.key].primary_connection_string}"
 
     /*
     # Settings for private Container Registires  

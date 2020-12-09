@@ -21,16 +21,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        
+
       - name: Login to ACR
         uses: azure/docker-login@v1
         with:
-          login-server: githubworkshop571846262.azurecr.io
+          login-server: ${{ secrets.REGISTRY_NAME }}.azurecr.io
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - run: |
-          docker build . -t ${{ secrets.REGISTRY_USERNAME }}.azurecr.io/festive-tech:${{ github.sha }}
+          docker build . -t ${{ secrets.REGISTRY_NAME }}.azurecr.io/festive-tech:${{ github.sha }}
           docker push ${{ secrets.REGISTRY_USERNAME }}.azurecr.io/festive-tech:${{ github.sha }}
 
   terraform:
