@@ -75,26 +75,26 @@ resource "azurerm_frontdoor" "frontdoor" {
   enforce_backend_pools_certificate_name_check = false
 
   routing_rule {
-    name               = "exampleRoutingRule1"
+    name               = "${var.resource_prefix}-RoutingRule1"
     accepted_protocols = ["Http", "Https"]
     patterns_to_match  = ["/*"]
-    frontend_endpoints = ["exampleFrontendEndpoint1"]
+    frontend_endpoints = ["${var.resource_prefix}-FrontendEndpoint1"]
     forwarding_configuration {
       forwarding_protocol = "MatchRequest"
-      backend_pool_name   = "exampleBackendBing"
+      backend_pool_name   = "${var.resource_prefix}-Backend"
     }
   }
 
   backend_pool_load_balancing {
-    name = "exampleLoadBalancingSettings1"
+    name = "${var.resource_prefix}-LoadBalancingSettings1"
   }
 
   backend_pool_health_probe {
-    name = "exampleHealthProbeSetting1"
+    name = "${var.resource_prefix}-HealthProbeSetting1"
   }
 
   backend_pool {
-    name = "exampleBackendBing"
+    name = "${var.resource_prefix}-Backend"
     
     dynamic backend {
       for_each = var.regionstest
@@ -107,12 +107,12 @@ resource "azurerm_frontdoor" "frontdoor" {
       }
     }
 
-    load_balancing_name = "exampleLoadBalancingSettings1"
-    health_probe_name   = "exampleHealthProbeSetting1"
+    load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
+    health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
   }
 
   frontend_endpoint {
-    name                              = "exampleFrontendEndpoint1"
+    name                              = "${var.resource_prefix}-FrontendEndpoint1"
     host_name                         = "${var.resource_prefix}-frontdoor.azurefd.net"
     custom_https_provisioning_enabled = false
   }
