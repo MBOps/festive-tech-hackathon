@@ -124,3 +124,33 @@ resource "azurerm_frontdoor" "frontdoor" {
   }
   depends_on = [azurerm_app_service.webapp]
 }
+
+resource "azurerm_app_service" "dockerapp" {
+  for_each = var.regionstest
+  name                = "${var.resource_prefix}-${var.short_names[each.key]}-dockerapp"
+  location            = each.value
+  resource_group_name = azurerm_resource_group.rg.name
+  app_service_plan_id = azurerm_app_service_plan.asp[each.key].id
+
+  # Do not attach Storage by default
+  app_settings {
+    WEBSITES_ENABLE_APP_SERVICE_STORAGE = false
+
+    /*
+    # Settings for private Container Registires  
+    DOCKER_REGISTRY_SERVER_URL      = ""
+    DOCKER_REGISTRY_SERVER_USERNAME = ""
+    DOCKER_REGISTRY_SERVER_PASSWORD = ""
+    */
+  }
+
+  # Configure Docker Image to load on start
+  site_config {
+    linux_fx_version = "DOCKER|appsvcsample/static-site:latest"
+    always_on        = "true"
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
+}
