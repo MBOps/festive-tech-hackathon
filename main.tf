@@ -22,7 +22,7 @@ resource "azurerm_resource_group" "rg" {
 
 # Provision the App Service plan to host the App Service web app in each region
 resource "azurerm_app_service_plan" "asp" {
-    for_each = var.regionstest
+    for_each = var.regions
     name                = "${var.resource_prefix}-${var.short_names[each.key]}-asp"
     location            = each.value
     resource_group_name = azurerm_resource_group.rg.name
@@ -36,7 +36,7 @@ resource "azurerm_app_service_plan" "asp" {
 
 # Provision the Azure App Service to host the main web site
 resource "azurerm_app_service" "webapp" {
-    for_each = var.regionstest
+    for_each = var.regions
     name                = "${var.resource_prefix}-${var.short_names[each.key]}-webapp"
     location            = each.value
     resource_group_name = azurerm_resource_group.rg.name
@@ -60,7 +60,7 @@ resource "azurerm_app_service" "webapp" {
 }
 
 resource "azurerm_storage_account" "storage" {
-    for_each = var.regionstest
+    for_each = var.regions
     name                     = replace(lower("${var.resource_prefix}-${var.short_names[each.key]}-sa"), "-", "")
     location                 = each.value
     resource_group_name      = azurerm_resource_group.rg.name
@@ -97,7 +97,7 @@ resource "azurerm_frontdoor" "frontdoor" {
     name = "${var.resource_prefix}-Backend"
     
     dynamic backend {
-      for_each = var.regionstest
+      for_each = var.regions
 
       content {
         host_header = "${var.resource_prefix}-${var.short_names[backend.key]}-webapp.azurewebsites.net"
