@@ -20,7 +20,7 @@ variable "admin_password" {
   description = "Azure Subscription ID to be used for billing"
 }
 
-variable "registry" {
+variable "registry_name" {
   description = "Azure Subscription ID to be used for billing"
 }
 variable "tag_name" {
