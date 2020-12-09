@@ -26,7 +26,7 @@ resource "azurerm_app_service_plan" "asp" {
     name                = "${var.resource_prefix}-${var.short_names[each.key]}-asp"
     location            = each.value
     resource_group_name = azurerm_resource_group.rg.name
-    kind                = "Windows"
+    kind                = "Linux"
 
     sku {
         tier = "Free"
@@ -134,7 +134,10 @@ resource "azurerm_app_service" "dockerapp" {
 
   # Do not attach Storage by default
   app_settings = {
-    WEBSITES_ENABLE_APP_SERVICE_STORAGE = false
+    #WEBSITES_ENABLE_APP_SERVICE_STORAGE = false
+
+    "storageContainerName"          = "${var.resource_prefix}-${var.short_names[each.key]}"
+    "connectionString "             = "${azurerm_storage_account.storage[each.key].primary_connection_string}"
 
     /*
     # Settings for private Container Registires  
@@ -153,4 +156,5 @@ resource "azurerm_app_service" "dockerapp" {
   identity {
     type = "SystemAssigned"
   }
+depends_on = [azurerm_storage_account.storage, azurerm_app_service_plan.asp]
 }
