@@ -65,13 +65,13 @@ jobs:
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
-      run: terraform plan -var="subscription_id=${{ secrets.SUBSCRIPTION_ID }}"
+      run: terraform plan -var="subscription_id=${{ secrets.SUBSCRIPTION_ID }}" -var="admin_username=${{ secrets.REGISTRY_USERNAME }}" -var="admin_password=${{ secrets.REGISTRY_PASSWORD }}" -var="registry=${{ secrets.REGISTRY_NAME }}.azurecr.io" -var="tag_name=${{ github.sha }}"
     
       # On push to master, build or change infrastructure according to Terraform configuration files
       # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: terraform apply -auto-approve -var="subscription_id=${{ secrets.SUBSCRIPTION_ID }}"
+      run: terraform apply -auto-approve -var="subscription_id=${{ secrets.SUBSCRIPTION_ID }}" -var="admin_username=${{ secrets.REGISTRY_USERNAME }}" -var="admin_password=${{ secrets.REGISTRY_PASSWORD }}" -var="registry=${{ secrets.REGISTRY_NAME }}.azurecr.io" -var="tag_name=${{ github.sha }}"
 
   # build-and-deploy:
   #   name: 'Build and Deploy'

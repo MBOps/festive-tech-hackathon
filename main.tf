@@ -140,16 +140,16 @@ resource "azurerm_app_service" "webapp" {
     # connectionString              = "${azurerm_storage_account.storage[each.key].primary_connection_string}"
 
     # Settings for private Container Registires  
-    DOCKER_REGISTRY_SERVER_URL      = "https://${azurerm_container_registry.acr.login_server}"
-    DOCKER_REGISTRY_SERVER_USERNAME = azurerm_container_registry.acr.admin_username
-    DOCKER_REGISTRY_SERVER_PASSWORD = azurerm_container_registry.acr.admin_password
+    DOCKER_REGISTRY_SERVER_URL      = "https://${var.registry_name}"
+    DOCKER_REGISTRY_SERVER_USERNAME = "${var.admin_username}"
+    DOCKER_REGISTRY_SERVER_PASSWORD = "${var.admin_password}"
 
   }
 
   # Configure Docker Image to load on start
   site_config {
-    # linux_fx_version = "DOCKER|${var.registry_name}:${var.tag_name}"
-    # always_on        = "true"
+    linux_fx_version = "DOCKER|${var.registry_name}:${var.tag_name}"
+    always_on        = "true"
   }
 
   identity {

@@ -12,6 +12,21 @@ variable "subscription_id" {
   description = "Azure Subscription ID to be used for billing"
 }
 
+variable "admin_username" {
+  description = "Azure Subscription ID to be used for billing"
+}
+
+variable "admin_password" {
+  description = "Azure Subscription ID to be used for billing"
+}
+
+variable "registry" {
+  description = "Azure Subscription ID to be used for billing"
+}
+variable "tag_name" {
+  description = "Azure Subscription ID to be used for billing"
+}
+
 variable  "branch" {
   description = "Github Branch used for deployment"
   default = "main"
