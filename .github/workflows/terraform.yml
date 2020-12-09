@@ -27,8 +27,8 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - run: |
-          docker build . -t githubworkshop571846262.azurecr.io/festive-tech:${{ github.sha }}
-          docker push githubworkshop571846262.azurecr.io/festive-tech:${{ github.sha }}
+          docker build . -t ${{ secrets.REGISTRY_USERNAME }}.azurecr.io/festive-tech:${{ github.sha }}
+          docker push ${{ secrets.REGISTRY_USERNAME }}.azurecr.io/festive-tech:${{ github.sha }}
 
   terraform:
     name: 'Terraform'
