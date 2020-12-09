@@ -15,9 +15,25 @@ env:
   AZURE_WEBAPP_PACKAGE_PATH: .
 
 jobs:
+  docker:
+    name: 'Docker Build and push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: githubworkshop571846262.azurecr.io
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - run: |
+          docker build . -t githubworkshop571846262.azurecr.io/festive-tech:${{ github.sha }}
+          docker push githubworkshop571846262.azurecr.io/festive-tech:${{ github.sha }}
+
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
+    needs: docker
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
@@ -54,46 +70,46 @@ jobs:
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve -var="subscription_id=${{ secrets.SUBSCRIPTION_ID }}"
 
-  build-and-deploy:
-    name: 'Build and Deploy'
-    runs-on: ubuntu-latest
-    needs: terraform
-    steps:
-    # checkout the repo
-    - name: 'Checkout GitHub Action' 
-      uses: actions/checkout@master
-      with:
-        repository: 'whaakman/festive-tech-santa-wishlist'
+  # build-and-deploy:
+  #   name: 'Build and Deploy'
+  #   runs-on: ubuntu-latest
+  #   needs: terraform
+  #   steps:
+  #   # checkout the repo
+  #   - name: 'Checkout GitHub Action' 
+  #     uses: actions/checkout@master
+  #     with:
+  #       repository: 'whaakman/festive-tech-santa-wishlist'
    
-    - uses: azure/login@v1
-      with:
-        creds: '{
-          "clientId":"${{ secrets.CLIENT_ID }}",
-          "clientSecret":"${{ secrets.CLIENT_SECRET }}",
-          "subscriptionId":"${{ secrets.SUBSCRIPTION_ID }}",
-          "tenantId":"${{ secrets.TENANT_ID }}"
-          }'
+  #   - uses: azure/login@v1
+  #     with:
+  #       creds: '{
+  #         "clientId":"${{ secrets.CLIENT_ID }}",
+  #         "clientSecret":"${{ secrets.CLIENT_SECRET }}",
+  #         "subscriptionId":"${{ secrets.SUBSCRIPTION_ID }}",
+  #         "tenantId":"${{ secrets.TENANT_ID }}"
+  #         }'
 
     
-    - name: Setup Dotnet Core 5.0
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '5.0'
+  #   - name: Setup Dotnet Core 5.0
+  #     uses: actions/setup-dotnet@v1
+  #     with:
+  #       dotnet-version: '5.0'
 
-    - name: 'Run dotnet build and publish'
-      shell: bash
-      working-directory: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
-      run: |
-        dotnet build --configuration Release
-        dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+  #   - name: 'Run dotnet build and publish'
+  #     shell: bash
+  #     working-directory: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+  #     run: |
+  #       dotnet build --configuration Release
+  #       dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
             
-    # deploy web app using Azure credentials
-    - uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'Festive-Tech-uks-webapp'
-        package: './myapp'
+  #   # deploy web app using Azure credentials
+  #   - uses: azure/webapps-deploy@v2
+  #     with:
+  #       app-name: 'Festive-Tech-uks-webapp'
+  #       package: './myapp'
 
-    # Azure logout 
-    - name: logout
-      run: |
-        az logout
+  #   # Azure logout 
+  #   - name: logout
+  #     run: |
+  #       az logout
