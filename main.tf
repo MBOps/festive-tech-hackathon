@@ -69,7 +69,7 @@ resource "azurerm_storage_account" "storage" {
     account_replication_type = "GRS"
 }
 
-# Provision the Azure FrontDoor 
+# Provision the Azure FrontDoor
 resource "azurerm_frontdoor" "frontdoor" {
   name                                         = "${var.resource_prefix}-frontdoor"
   resource_group_name                          = azurerm_resource_group.rg.name
@@ -115,6 +115,11 @@ resource "azurerm_frontdoor" "frontdoor" {
   frontend_endpoint {
     name                              = "${var.resource_prefix}-FrontendEndpoint1"
     host_name                         = "${var.resource_prefix}-frontdoor.azurefd.net"
+    custom_https_provisioning_enabled = false
+  }
+  frontend_endpoint {
+    name                              = "${var.resource_prefix}-FrontendEndpoint2"
+    host_name                         = "${var.resource_prefix}.com"
     custom_https_provisioning_enabled = false
   }
   depends_on = [azurerm_app_service.webapp]
