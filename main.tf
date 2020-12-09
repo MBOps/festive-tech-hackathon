@@ -117,11 +117,11 @@ resource "azurerm_frontdoor" "frontdoor" {
     host_name                         = "${var.resource_prefix}-frontdoor.azurefd.net"
     custom_https_provisioning_enabled = false
   }
-  frontend_endpoint {
-    name                              = "${var.resource_prefix}-FrontendEndpoint2"
-    host_name                         = "${var.resource_prefix}.com"
-    custom_https_provisioning_enabled = false
-  }
+#   frontend_endpoint {
+#     name                              = "${var.resource_prefix}-FrontendEndpoint2"
+#     host_name                         = "${var.resource_prefix}.com"
+#     custom_https_provisioning_enabled = false
+#   }
   depends_on = [azurerm_app_service.webapp]
 }
 
