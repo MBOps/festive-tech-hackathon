@@ -7,13 +7,6 @@ variable "rglocation" {
   description = "The Azure location for the Resource Group"
   default     = "northeurope"
 }
-
-variable "webapplocations" {
-  description = "array of locations for webapps"
-  type        = list(string)
-#  default     = ["northeurope", "uksouth", "westeurope"]
-  default     = ["northeurope"]
-}
  
 variable "subscription_id" {
   description = "Azure Subscription ID to be used for billing"
@@ -41,6 +34,7 @@ variable "repo_url" {
     default = {
       us-west          = "West US"
       us-west-2        = "West US 2"
+      us-central       = "Central US"
       us-west-central  = "West Central US"
       us-south-central = "South Central US"
       us-north-central = "North Central US"
@@ -54,37 +48,38 @@ variable "repo_url" {
       eu-north         = "North Europe"
       eu-west          = "West Europe"
       fr-central       = "France Central"
-      #fr-south         = "France South"
-      #ger-north-east   = "Germany Northeast"
-      #ger-central      = "Germany Central"
       ger-west-central = "Germany West Central"
       swz-north        = "Switzerland North"
-      #swz-west         = "Switzerland West"
       norw-east        = "Norway East"
-      #norw-west        = "Norway West"
-      #saf-west         = "South Africa West"
       saf-north        = "South Africa North"
       ind-west         = "West India"
       ind-central      = "Central India"
       ind-south        = "South India"
       asia-south-east  = "Southeast Asia"
       asia-east        = "East Asia"
-      #ch-north         = "China North"
-      #ch-east          = "China East"
       kor-central      = "Korea Central"
       kor-south        = "Korea South"
       jap-east         = "Japan East"
       jap-west         = "Japan West"
       aus-central      = "Australia Central"
-      #aus-central-2    = "Australia Central 2"
       aus-east         = "Australia East"
       aus-south-east   = "Australia Southeast"
-      #uae-central      = "UAE Central" # United Arab Emirates
-      uae-north        = "UAE North"   # United Arab Emirates
-      #bra-south-east   = "Brazil Southeast"
+      uae-north        = "UAE North"   
+
+
+      #aus-central-2    = "Australia Central 2"
+      #ch-north         = "China North"
+      #ch-east          = "China East"
       #ch-north-2       = "China North 2"
       #ch-east-2        = "China East 2"
-      us-central       = "Central US"
+      #bra-south-east   = "Brazil Southeast"
+      #fr-south         = "France South"
+      #ger-north-east   = "Germany Northeast"
+      #ger-central      = "Germany Central"
+      #norw-west        = "Norway West"
+      #saf-west         = "South Africa West"
+      #swz-west         = "Switzerland West"
+      #uae-central      = "UAE Central" 
     }
   }
 

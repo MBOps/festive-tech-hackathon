@@ -22,7 +22,7 @@ resource "azurerm_resource_group" "rg" {
 
 # Provision the App Service plan to host the App Service web app in each region
 resource "azurerm_app_service_plan" "asp" {
-    for_each = var.regions
+    for_each = var.regionstest
     name                = "${var.resource_prefix}-${var.short_names[each.key]}-asp"
     location            = each.value
     resource_group_name = azurerm_resource_group.rg.name
@@ -36,7 +36,7 @@ resource "azurerm_app_service_plan" "asp" {
 
 # Provision the Azure App Service to host the Website
 resource "azurerm_app_service" "webapp" {
-    for_each = var.regions
+    for_each = var.regionstest
     name                = "${var.resource_prefix}-${var.short_names[each.key]}-webapp"
     location            = each.value
     resource_group_name = azurerm_resource_group.rg.name
@@ -61,7 +61,7 @@ resource "azurerm_app_service" "webapp" {
 
 # Provision the Azure Storage Account 
 resource "azurerm_storage_account" "storage" {
-    for_each = var.regions
+    for_each = var.regionstest
     name                     = replace(lower("${var.resource_prefix}-${var.short_names[each.key]}-sa"), "-", "")
     location                 = each.value
     resource_group_name      = azurerm_resource_group.rg.name
@@ -72,7 +72,6 @@ resource "azurerm_storage_account" "storage" {
 # Provision the Azure FrontDoor 
 resource "azurerm_frontdoor" "frontdoor" {
   name                                         = "${var.resource_prefix}-frontdoor"
-  #location                                     = "Global"
   resource_group_name                          = azurerm_resource_group.rg.name
   enforce_backend_pools_certificate_name_check = false
 
@@ -99,7 +98,7 @@ resource "azurerm_frontdoor" "frontdoor" {
     name = "${var.resource_prefix}-Backend"
     
     dynamic backend {
-      for_each = var.regions
+      for_each = var.regionstest
 
       content {
         host_header = "${var.resource_prefix}-${var.short_names[backend.key]}-webapp.azurewebsites.net"
