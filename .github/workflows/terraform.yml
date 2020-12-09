@@ -19,6 +19,9 @@ jobs:
     name: 'Docker Build and push'
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
       - name: Login to ACR
         uses: azure/docker-login@v1
         with:
