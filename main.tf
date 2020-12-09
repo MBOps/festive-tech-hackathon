@@ -9,7 +9,7 @@ terraform {
 }
 # Configure the AzureRM provider (using v2.1)
 provider "azurerm" {
-    version         = "~>2.14.0"
+    version         = ">=2.39.0"
     subscription_id = var.subscription_id
     features {}
 }
@@ -125,37 +125,36 @@ resource "azurerm_storage_account" "storage" {
 #   depends_on = [azurerm_app_service.webapp]
 # }
 
-# resource "azurerm_app_service" "webapp" {
-#   for_each = var.regionstest
-#   name                = "${var.resource_prefix}-${var.short_names[each.key]}-webapp"
-#   location            = each.value
-#   resource_group_name = azurerm_resource_group.rg.name
-#   app_service_plan_id = azurerm_app_service_plan.asp[each.key].id
+resource "azurerm_app_service" "webapp" {
+  for_each = var.regionstest
+  name                = "${var.resource_prefix}-${var.short_names[each.key]}-webapp"
+  location            = each.value
+  resource_group_name = azurerm_resource_group.rg.name
+  app_service_plan_id = azurerm_app_service_plan.asp[each.key].id
 
-#   # Do not attach Storage by default
-#   app_settings = {
-#     #WEBSITES_ENABLE_APP_SERVICE_STORAGE = false
+  # Do not attach Storage by default
+  app_settings = {
+    #WEBSITES_ENABLE_APP_SERVICE_STORAGE = false
 
-#     # storageContainerName          = "${var.resource_prefix}-${var.short_names[each.key]}"
-#     # connectionString              = "${azurerm_storage_account.storage[each.key].primary_connection_string}"
+    # storageContainerName          = "${var.resource_prefix}-${var.short_names[each.key]}"
+    # connectionString              = "${azurerm_storage_account.storage[each.key].primary_connection_string}"
 
-#     /*
-#     # Settings for private Container Registires  
-#     DOCKER_REGISTRY_SERVER_URL      = ""
-#     DOCKER_REGISTRY_SERVER_USERNAME = ""
-#     DOCKER_REGISTRY_SERVER_PASSWORD = ""
-#     */
-#   }
+    # Settings for private Container Registires  
+    DOCKER_REGISTRY_SERVER_URL      = "https://${azurerm_container_registry.acr.login_server}"
+    DOCKER_REGISTRY_SERVER_USERNAME = azurerm_container_registry.acr.admin_username
+    DOCKER_REGISTRY_SERVER_PASSWORD = azurerm_container_registry.acr.admin_password
 
-#   # Configure Docker Image to load on start
-#   site_config {
-#     # linux_fx_version = "DOCKER|appsvcsample/static-site:latest"
-#     # always_on        = "true"
-#   }
+  }
 
-#   identity {
-#     type = "SystemAssigned"
-#   }
+  # Configure Docker Image to load on start
+  site_config {
+    # linux_fx_version = "DOCKER|${var.registry_name}:${var.tag_name}"
+    # always_on        = "true"
+  }
+
+  identity {
+    type = "SystemAssigned"
+  }
   
-#   depends_on = [azurerm_storage_account.storage, azurerm_app_service_plan.asp]
-# }
+  depends_on = [azurerm_storage_account.storage, azurerm_app_service_plan.asp]
+}
