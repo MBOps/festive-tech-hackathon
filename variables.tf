@@ -40,7 +40,6 @@ variable "repo_url" {
 variable "regionstest" {
   default = {
     uk-south = "UK South"
-    eu-north = "North Europe"
   }
 }
 
