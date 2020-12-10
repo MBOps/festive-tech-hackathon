@@ -42,8 +42,8 @@ resource "azurerm_virtual_network" "vnet" {
   resource_group_name = azurerm_resource_group.rg.name
   address_space       = ["10.1.1.0/24"]
   subnet {
-    name           = "subnet1"
-    address_prefix = "10.1.1.0/24"
+    name              = "subnet1"
+    address_prefix    = "10.1.1.0/24"
     service_endpoints = ["Microsoft.Storage"]
   }
 
@@ -64,7 +64,7 @@ resource "azurerm_storage_account" "storage" {
     default_action             = "Deny"
     virtual_network_subnet_ids = [azurerm_subnet.subnet1.id]
   }
-  
+
 }
 
 # Provision the Azure FrontDoor
