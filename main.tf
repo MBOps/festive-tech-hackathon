@@ -118,11 +118,6 @@ resource "azurerm_frontdoor" "frontdoor" {
     host_name                         = "${var.resource_prefix}-frontdoor.azurefd.net"
     custom_https_provisioning_enabled = false
   }
-  #   frontend_endpoint {
-  #     name                              = "${var.resource_prefix}-FrontendEndpoint2"
-  #     host_name                         = "${var.resource_prefix}.com"
-  #     custom_https_provisioning_enabled = false
-  #   }
   depends_on = [azurerm_app_service.webapp]
 }
 
@@ -135,8 +130,6 @@ resource "azurerm_app_service" "webapp" {
 
   # Do not attach Storage by default
   app_settings = {
-    #WEBSITES_ENABLE_APP_SERVICE_STORAGE = false
-
     "storageContainerName" = "${var.resource_prefix}-${var.short_names[each.key]}"
     "connectionString"     = "${azurerm_storage_account.storage[each.key].primary_connection_string}"
 
@@ -151,6 +144,9 @@ resource "azurerm_app_service" "webapp" {
   site_config {
     linux_fx_version = "DOCKER|${var.registry_name}/festive-tech:${var.tag_name}"
     always_on        = "true"
+    ip_restriction {
+        virtual_network_subnet_id = [azurerm_subnet.internal[each.key].id]
+    }
   }
 
   identity {
