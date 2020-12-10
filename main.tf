@@ -145,7 +145,7 @@ resource "azurerm_app_service" "webapp" {
     linux_fx_version = "DOCKER|${var.registry_name}/festive-tech:${var.tag_name}"
     always_on        = "true"
     ip_restriction {
-      virtual_network_subnet_id = [azurerm_subnet.internal[each.key].id]
+      virtual_network_subnet_id = "${azurerm_subnet.internal[each.key].id}"
     }
   }
 
