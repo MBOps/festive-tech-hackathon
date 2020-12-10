@@ -9,29 +9,29 @@ terraform {
 }
 # Configure the AzureRM provider (using v2.1)
 provider "azurerm" {
-    version         = ">=2.39.0"
-    subscription_id = var.subscription_id
-    features {}
+  version         = ">=2.39.0"
+  subscription_id = var.subscription_id
+  features {}
 }
 
 # Provision a resource group to hold all Azure resources
 resource "azurerm_resource_group" "rg" {
-    name            = "${var.resource_prefix}-rg"
-    location        = var.rglocation
+  name     = "${var.resource_prefix}-rg"
+  location = var.rglocation
 }
 
 # Provision the App Service plan to host the App Service web app in each region
 resource "azurerm_app_service_plan" "asp" {
-    for_each = var.regionstest
-    name                = "${var.resource_prefix}-${var.short_names[each.key]}-asp"
-    location            = each.value
-    resource_group_name = azurerm_resource_group.rg.name
-    kind                = "Linux"
-    reserved            = true
-    sku {
-        tier = "Basic"
-        size = "B1"
-    }
+  for_each            = var.regionstest
+  name                = "${var.resource_prefix}-${var.short_names[each.key]}-asp"
+  location            = each.value
+  resource_group_name = azurerm_resource_group.rg.name
+  kind                = "Linux"
+  reserved            = true
+  sku {
+    tier = "Basic"
+    size = "B1"
+  }
 }
 
 # Provision the Azure App Service to host the Website
@@ -56,17 +56,17 @@ resource "azurerm_app_service_plan" "asp" {
 #         "connectionString "             = "${azurerm_storage_account.storage[each.key].primary_connection_string}"
 #     }
 #     depends_on = [azurerm_storage_account.storage, azurerm_app_service_plan.asp]
-    
+
 # }
 
 # Provision the Azure Storage Account 
 resource "azurerm_storage_account" "storage" {
-    for_each = var.regionstest
-    name                     = replace(lower("${var.resource_prefix}-${var.short_names[each.key]}-sa"), "-", "")
-    location                 = each.value
-    resource_group_name      = azurerm_resource_group.rg.name
-    account_tier             = "Standard"
-    account_replication_type = "GRS"
+  for_each                 = var.regionstest
+  name                     = replace(lower("${var.resource_prefix}-${var.short_names[each.key]}-sa"), "-", "")
+  location                 = each.value
+  resource_group_name      = azurerm_resource_group.rg.name
+  account_tier             = "Standard"
+  account_replication_type = "GRS"
 }
 
 # Provision the Azure FrontDoor
@@ -96,8 +96,8 @@ resource "azurerm_frontdoor" "frontdoor" {
 
   backend_pool {
     name = "${var.resource_prefix}-Backend"
-    
-    dynamic backend {
+
+    dynamic "backend" {
       for_each = var.regionstest
 
       content {
@@ -117,16 +117,16 @@ resource "azurerm_frontdoor" "frontdoor" {
     host_name                         = "${var.resource_prefix}-frontdoor.azurefd.net"
     custom_https_provisioning_enabled = false
   }
-#   frontend_endpoint {
-#     name                              = "${var.resource_prefix}-FrontendEndpoint2"
-#     host_name                         = "${var.resource_prefix}.com"
-#     custom_https_provisioning_enabled = false
-#   }
+  #   frontend_endpoint {
+  #     name                              = "${var.resource_prefix}-FrontendEndpoint2"
+  #     host_name                         = "${var.resource_prefix}.com"
+  #     custom_https_provisioning_enabled = false
+  #   }
   depends_on = [azurerm_app_service.webapp]
 }
 
 resource "azurerm_app_service" "webapp" {
-  for_each = var.regionstest
+  for_each            = var.regionstest
   name                = "${var.resource_prefix}-${var.short_names[each.key]}-webapp"
   location            = each.value
   resource_group_name = azurerm_resource_group.rg.name
@@ -136,8 +136,8 @@ resource "azurerm_app_service" "webapp" {
   app_settings = {
     #WEBSITES_ENABLE_APP_SERVICE_STORAGE = false
 
-    "storageContainerName"          = "${var.resource_prefix}-${var.short_names[each.key]}"
-    "connectionString"              = "${azurerm_storage_account.storage[each.key].primary_connection_string}"
+    "storageContainerName" = "${var.resource_prefix}-${var.short_names[each.key]}"
+    "connectionString"     = "${azurerm_storage_account.storage[each.key].primary_connection_string}"
 
     # Settings for private Container Registires  
     DOCKER_REGISTRY_SERVER_URL      = "https://${var.registry_name}"
@@ -155,6 +155,6 @@ resource "azurerm_app_service" "webapp" {
   identity {
     type = "SystemAssigned"
   }
-  
+
   depends_on = [azurerm_storage_account.storage, azurerm_app_service_plan.asp]
 }
