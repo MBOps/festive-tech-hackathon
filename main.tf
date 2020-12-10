@@ -29,35 +29,24 @@ resource "azurerm_app_service_plan" "asp" {
   kind                = "Linux"
   reserved            = true
   sku {
-    tier = "Basic"
-    size = "B1"
+    tier = "Standard"
+    size = "S1"
   }
+  depends_on = [azurerm_virtual_network.vnet]
 }
 
-# Provision the Azure App Service to host the Website
-# resource "azurerm_app_service" "webapp" {
-#     for_each = var.regionstest
-#     name                = "${var.resource_prefix}-${var.short_names[each.key]}-webapp"
-#     location            = each.value
-#     resource_group_name = azurerm_resource_group.rg.name
-#     app_service_plan_id = azurerm_app_service_plan.asp[each.key].id
+resource "azurerm_virtual_network" "vnet" {
+  for_each            = var.regionstest
+  name                = "${var.resource_prefix}-${var.short_names[each.key]}-vnet"
+  location            = each.value
+  resource_group_name = azurerm_resource_group.rg.name
+  address_space       = ["10.1.1.0/24"]
+  subnet {
+    name           = "subnet1"
+    address_prefix = "10.1.1.0/24"
+  }
 
-#     # site_config {
-#         # always_on           = true
-#         # default_documents   = [
-#         #     "Default.htm",
-#         #     "Default.html",
-#         #     "hostingstart.html"
-#         # ]
-#     # }
-
-#     app_settings = {
-#         "storageContainerName"          = "${var.resource_prefix}-${var.short_names[each.key]}"
-#         "connectionString "             = "${azurerm_storage_account.storage[each.key].primary_connection_string}"
-#     }
-#     depends_on = [azurerm_storage_account.storage, azurerm_app_service_plan.asp]
-
-# }
+}
 
 # Provision the Azure Storage Account 
 resource "azurerm_storage_account" "storage" {
