@@ -44,6 +44,7 @@ resource "azurerm_virtual_network" "vnet" {
   subnet {
     name           = "subnet1"
     address_prefix = "10.1.1.0/24"
+    service_endpoints = ["Microsoft.Storage"]
   }
 
 }
@@ -58,6 +59,10 @@ resource "azurerm_storage_account" "storage" {
   account_replication_type = "GRS"
   min_tls_version          = "TLS1_2"
   allow_blob_public_access = false
+
+  network_rules {
+    default_action             = "Deny"
+    virtual_network_subnet_ids = [azurerm_subnet.subnet1.id]
 }
 
 # Provision the Azure FrontDoor
