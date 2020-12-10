@@ -47,7 +47,7 @@ resource "azurerm_subnet" "internal" {
   for_each             = var.regionstest
   name                 = "internal"
   resource_group_name  = azurerm_resource_group.rg.name
-  virtual_network_name = azurerm_virtual_network[each.key].vnet.name
+  virtual_network_name = azurerm_virtual_network.vnet[each.key].name
   address_prefixes     = ["10.1.1.0/24"]
   service_endpoints    = ["Microsoft.Storage"]
 }
@@ -65,7 +65,7 @@ resource "azurerm_storage_account" "storage" {
 
   network_rules {
     default_action             = "Deny"
-    virtual_network_subnet_ids = [azurerm_subnet[each.key].internal.id]
+    virtual_network_subnet_ids = [azurerm_subnet.internal[each.key].id]
   }
 
 }
