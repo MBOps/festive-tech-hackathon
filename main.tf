@@ -50,7 +50,7 @@ resource "azurerm_subnet" "internal" {
   virtual_network_name = azurerm_virtual_network.vnet[each.key].name
   address_prefixes     = ["10.1.1.0/24"]
   service_endpoints    = ["Microsoft.Storage"]
-  depends_on = [azurerm_virtual_network.vnet]
+  depends_on           = [azurerm_virtual_network.vnet]
 }
 
 # Provision the Azure Storage Account 
