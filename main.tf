@@ -41,12 +41,14 @@ resource "azurerm_virtual_network" "vnet" {
   location            = each.value
   resource_group_name = azurerm_resource_group.rg.name
   address_space       = ["10.1.1.0/24"]
-  subnet {
-    name              = "subnet1"
-    address_prefix    = "10.1.1.0/24"
-    service_endpoints = ["Microsoft.Storage"]
-  }
+}
 
+resource "azurerm_subnet" "internal" {
+  name                 = "internal"
+  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = ["10.1.1.0/24"]
+  service_endpoints = ["Microsoft.Storage"]
 }
 
 # Provision the Azure Storage Account 
