@@ -32,7 +32,6 @@ resource "azurerm_app_service_plan" "asp" {
     tier = "Standard"
     size = "S1"
   }
-  depends_on = [azurerm_virtual_network.vnet]
 }
 
 resource "azurerm_virtual_network" "vnet" {
