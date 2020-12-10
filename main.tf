@@ -68,7 +68,7 @@ resource "azurerm_storage_account" "storage" {
     default_action             = "Deny"
     virtual_network_subnet_ids = [azurerm_subnet.internal[each.key].id]
   }
-  depends_on               = [azurerm_subnet.internal]
+  depends_on = [azurerm_subnet.internal]
 }
 
 # Provision the Azure FrontDoor
