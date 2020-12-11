@@ -154,7 +154,7 @@ resource "azurerm_app_service" "webapp" {
 }
 
 resource "azurerm_app_service_virtual_network_swift_connection" "vnetconnection" {
-  for_each            = var.regionstest
+  for_each       = var.regionstest
   app_service_id = azurerm_app_service_plan.asp[each.key].id
   subnet_id      = azurerm_subnet.internal[each.key].id
 }
