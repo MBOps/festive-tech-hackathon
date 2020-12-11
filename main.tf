@@ -137,7 +137,7 @@ resource "azurerm_app_service" "webapp" {
     DOCKER_REGISTRY_SERVER_URL      = "https://${var.registry_name}"
     DOCKER_REGISTRY_SERVER_USERNAME = "${var.admin_username}"
     DOCKER_REGISTRY_SERVER_PASSWORD = "${var.admin_password}"
-    APPINSIGHTS_INSTRUMENTATIONKEY  = "${azurerm_application_insights.appinsights.instrumentation_key}"
+    #APPINSIGHTS_INSTRUMENTATIONKEY  = "${azurerm_application_insights.appinsights.instrumentation_key}"
   }
 
   # Configure Docker Image to load on start
@@ -160,74 +160,75 @@ resource "azurerm_app_service" "webapp" {
 #   depends_on     = [azurerm_subnet.internal, azurerm_app_service.webapp]
 # }
 
-resource "azurerm_application_insights" "appinsights" {
-  name                = "${var.resource_prefix}-appinsights"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  application_type    = "web"
-}
-
-# resource "azurerm_monitor_autoscale_setting" "example" {
-#   name                = "myAutoscaleSetting"
-#   resource_group_name = azurerm_resource_group.example.name
-#   location            = azurerm_resource_group.example.location
-#   target_resource_id  = azurerm_virtual_machine_scale_set.example.id
-
-#   profile {
-#     name = "defaultProfile"
-
-#     capacity {
-#       default = 1
-#       minimum = 1
-#       maximum = 10
-#     }
-
-#     rule {
-#       metric_trigger {
-#         metric_name        = "Percentage CPU"
-#         metric_resource_id = azurerm_virtual_machine_scale_set.example.id
-#         time_grain         = "PT1M"
-#         statistic          = "Average"
-#         time_window        = "PT5M"
-#         time_aggregation   = "Average"
-#         operator           = "GreaterThan"
-#         threshold          = 75
-#       }
-
-#       scale_action {
-#         direction = "Increase"
-#         type      = "ChangeCount"
-#         value     = "1"
-#         cooldown  = "PT1M"
-#       }
-#     }
-
-#     rule {
-#       metric_trigger {
-#         metric_name        = "Percentage CPU"
-#         metric_resource_id = azurerm_virtual_machine_scale_set.example.id
-#         time_grain         = "PT1M"
-#         statistic          = "Average"
-#         time_window        = "PT5M"
-#         time_aggregation   = "Average"
-#         operator           = "LessThan"
-#         threshold          = 25
-#       }
-
-#       scale_action {
-#         direction = "Decrease"
-#         type      = "ChangeCount"
-#         value     = "1"
-#         cooldown  = "PT1M"
-#       }
-#     }
-#   }
-
-#   notification {
-#     email {
-#       send_to_subscription_administrator    = true
-#       send_to_subscription_co_administrator = true
-#       custom_emails                         = ["admin@contoso.com"]
-#     }
-#   }
+# resource "azurerm_application_insights" "appinsights" {
+#   name                = "${var.resource_prefix}-appinsights"
+#   location            = azurerm_resource_group.rg.location
+#   resource_group_name = azurerm_resource_group.rg.name
+#   application_type    = "web"
 # }
+
+resource "azurerm_monitor_autoscale_setting" "autoscaling" {
+  for_each            = var.regions
+  name                = "${var.resource_prefix}-${var.short_names[each.key]}-scaling"
+  location            = each.value
+  resource_group_name = azurerm_resource_group.rg.name
+  target_resource_id  = azurerm_app_service.webapp[each.key].id
+
+  #   profile {
+  #     name = "defaultProfile"
+
+  #     capacity {
+  #       default = 1
+  #       minimum = 1
+  #       maximum = 10
+  #     }
+
+  #     rule {
+  #       metric_trigger {
+  #         metric_name        = "Percentage CPU"
+  #         metric_resource_id = azurerm_virtual_machine_scale_set.example.id
+  #         time_grain         = "PT1M"
+  #         statistic          = "Average"
+  #         time_window        = "PT5M"
+  #         time_aggregation   = "Average"
+  #         operator           = "GreaterThan"
+  #         threshold          = 75
+  #       }
+
+  #       scale_action {
+  #         direction = "Increase"
+  #         type      = "ChangeCount"
+  #         value     = "1"
+  #         cooldown  = "PT1M"
+  #       }
+  #     }
+
+  #     rule {
+  #       metric_trigger {
+  #         metric_name        = "Percentage CPU"
+  #         metric_resource_id = azurerm_virtual_machine_scale_set.example.id
+  #         time_grain         = "PT1M"
+  #         statistic          = "Average"
+  #         time_window        = "PT5M"
+  #         time_aggregation   = "Average"
+  #         operator           = "LessThan"
+  #         threshold          = 25
+  #       }
+
+  #       scale_action {
+  #         direction = "Decrease"
+  #         type      = "ChangeCount"
+  #         value     = "1"
+  #         cooldown  = "PT1M"
+  #       }
+  #     }
+  #   }
+
+  #   notification {
+  #     email {
+  #       send_to_subscription_administrator    = true
+  #       send_to_subscription_co_administrator = true
+  #       custom_emails                         = ["admin@contoso.com"]
+  #     }
+  #   }
+}
