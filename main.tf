@@ -153,9 +153,16 @@ resource "azurerm_app_service" "webapp" {
   depends_on = [azurerm_storage_account.storage, azurerm_app_service_plan.asp]
 }
 
-resource "azurerm_app_service_virtual_network_swift_connection" "vnetconnection" {
-  for_each       = var.regions
-  app_service_id = azurerm_app_service.webapp[each.key].id
-  subnet_id      = azurerm_subnet.internal[each.key].id
-  depends_on     = [azurerm_subnet.internal, azurerm_app_service.webapp]
+# resource "azurerm_app_service_virtual_network_swift_connection" "vnetconnection" {
+#   for_each       = var.regions
+#   app_service_id = azurerm_app_service.webapp[each.key].id
+#   subnet_id      = azurerm_subnet.internal[each.key].id
+#   depends_on     = [azurerm_subnet.internal, azurerm_app_service.webapp]
+# }
+
+resource "azurerm_application_insights" "appinsights" {
+  name                = "${var.resource_prefix}-${var.short_names}-appinsights"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  application_type    = "web"
 }
