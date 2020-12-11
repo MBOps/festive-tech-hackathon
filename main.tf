@@ -228,7 +228,6 @@ resource "azurerm_monitor_autoscale_setting" "autoscaling" {
     email {
       send_to_subscription_administrator    = true
       send_to_subscription_co_administrator = true
-      custom_emails                         = [""]
     }
   }
 }
