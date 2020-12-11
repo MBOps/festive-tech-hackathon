@@ -172,7 +172,7 @@ resource "azurerm_monitor_autoscale_setting" "autoscaling" {
   name                = "${var.resource_prefix}-${var.short_names[each.key]}-scaling"
   location            = each.value
   resource_group_name = azurerm_resource_group.rg.name
-  target_resource_id  = azurerm_app_service.webapp[each.key].id
+  target_resource_id  = azurerm_app_service_plan.asp[each.key].id
 
   profile {
     name = "defaultProfile"
@@ -186,7 +186,7 @@ resource "azurerm_monitor_autoscale_setting" "autoscaling" {
     rule {
       metric_trigger {
         metric_name        = "Percentage CPU"
-        metric_resource_id = azurerm_app_service.webapp[each.key].id
+        metric_resource_id = azurerm_app_service_plan.asp[each.key].id
         time_grain         = "PT1M"
         statistic          = "Average"
         time_window        = "PT5M"
@@ -206,7 +206,7 @@ resource "azurerm_monitor_autoscale_setting" "autoscaling" {
     rule {
       metric_trigger {
         metric_name        = "Percentage CPU"
-        metric_resource_id = azurerm_app_service.webapp[each.key].id
+        metric_resource_id = azurerm_app_service_plan.asp[each.key].id
         time_grain         = "PT1M"
         statistic          = "Average"
         time_window        = "PT5M"
