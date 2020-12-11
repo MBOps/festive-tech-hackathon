@@ -137,14 +137,14 @@ resource "azurerm_app_service" "webapp" {
     # DOCKER_REGISTRY_SERVER_URL      = "https://${var.registry_name}"
     # DOCKER_REGISTRY_SERVER_USERNAME = "${var.admin_username}"
     # DOCKER_REGISTRY_SERVER_PASSWORD = "${var.admin_password}"
-    APPINSIGHTS_INSTRUMENTATIONKEY  = "${azurerm_application_insights.appinsights.instrumentation_key}"
+    APPINSIGHTS_INSTRUMENTATIONKEY = "${azurerm_application_insights.appinsights.instrumentation_key}"
   }
 
   # Configure Docker Image to load on start
-    site_config {
+  site_config {
     #   linux_fx_version = "DOCKER|${var.registry_name}/festive-tech:${var.tag_name}"
-      always_on        = "true"
-    }
+    always_on = "true"
+  }
 
   identity {
     type = "SystemAssigned"
