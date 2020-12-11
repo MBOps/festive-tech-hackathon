@@ -205,7 +205,7 @@ resource "azurerm_monitor_autoscale_setting" "autoscaling" {
 
     rule {
       metric_trigger {
-        metric_name        = "Percentage CPU"
+        metric_name        = "CPUPercentage"
         metric_resource_id = azurerm_app_service_plan.asp[each.key].id
         time_grain         = "PT1M"
         statistic          = "Average"
