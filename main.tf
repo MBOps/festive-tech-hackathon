@@ -144,9 +144,6 @@ resource "azurerm_app_service" "webapp" {
   site_config {
     linux_fx_version = "DOCKER|${var.registry_name}/festive-tech:${var.tag_name}"
     always_on        = "true"
-    ip_restriction {
-      virtual_network_subnet_id = "${azurerm_subnet.internal[each.key].id}"
-    }
   }
 
   identity {
@@ -154,4 +151,10 @@ resource "azurerm_app_service" "webapp" {
   }
 
   depends_on = [azurerm_storage_account.storage, azurerm_app_service_plan.asp]
+}
+
+resource "azurerm_app_service_virtual_network_swift_connection" "vnetconnection" {
+  for_each            = var.regionstest
+  app_service_id = azurerm_app_service_plan.asp[each.key].id
+  subnet_id      = azurerm_subnet.internal[each.key].id
 }
