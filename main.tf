@@ -22,7 +22,7 @@ resource "azurerm_resource_group" "rg" {
 
 # Provision the App Service plan to host the App Service web app in each region
 resource "azurerm_app_service_plan" "asp" {
-  for_each            = var.regionstest
+  for_each            = var.regions
   name                = "${var.resource_prefix}-${var.short_names[each.key]}-asp"
   location            = each.value
   resource_group_name = azurerm_resource_group.rg.name
@@ -35,7 +35,7 @@ resource "azurerm_app_service_plan" "asp" {
 }
 
 resource "azurerm_virtual_network" "vnet" {
-  for_each            = var.regionstest
+  for_each            = var.regions
   name                = "${var.resource_prefix}-${var.short_names[each.key]}-vnet"
   location            = each.value
   resource_group_name = azurerm_resource_group.rg.name
@@ -43,7 +43,7 @@ resource "azurerm_virtual_network" "vnet" {
 }
 
 resource "azurerm_subnet" "internal" {
-  for_each             = var.regionstest
+  for_each             = var.regions
   name                 = "internal"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet[each.key].name
@@ -54,7 +54,7 @@ resource "azurerm_subnet" "internal" {
 
 # Provision the Azure Storage Account 
 resource "azurerm_storage_account" "storage" {
-  for_each                 = var.regionstest
+  for_each                 = var.regions
   name                     = replace(lower("${var.resource_prefix}-${var.short_names[each.key]}-sa"), "-", "")
   location                 = each.value
   resource_group_name      = azurerm_resource_group.rg.name
@@ -99,7 +99,7 @@ resource "azurerm_frontdoor" "frontdoor" {
     name = "${var.resource_prefix}-Backend"
 
     dynamic "backend" {
-      for_each = var.regionstest
+      for_each = var.regions
 
       content {
         host_header = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
@@ -122,7 +122,7 @@ resource "azurerm_frontdoor" "frontdoor" {
 }
 
 resource "azurerm_app_service" "webapp" {
-  for_each            = var.regionstest
+  for_each            = var.regions
   name                = "${var.resource_prefix}-${var.short_names[each.key]}-webapp"
   location            = each.value
   resource_group_name = azurerm_resource_group.rg.name
@@ -154,7 +154,8 @@ resource "azurerm_app_service" "webapp" {
 }
 
 resource "azurerm_app_service_virtual_network_swift_connection" "vnetconnection" {
-  for_each       = var.regionstest
+  for_each       = var.regions
   app_service_id = azurerm_app_service.webapp[each.key].id
   subnet_id      = azurerm_subnet.internal[each.key].id
+  depends_on     = [azurerm_subnet.internal, azurerm_app_service.webapp]
 }

@@ -37,13 +37,13 @@ variable "repo_url" {
   default     = "https://github.com/whaakman/festive-tech-santa-wishlist"
 }
 
-variable "regionstest" {
+variable "regions" {
   default = {
     uk-south = "UK South"
   }
 }
 
-variable "regions" {
+variable "regions2" {
   description = "Regions to be used to deploy too"
   default = {
     us-west          = "West US"
