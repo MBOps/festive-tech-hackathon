@@ -62,12 +62,12 @@ resource "azurerm_storage_account" "storage" {
   account_tier             = "Standard"
   account_replication_type = "GRS"
   min_tls_version          = "TLS1_2"
-  allow_blob_public_access = false
+  #   allow_blob_public_access = false
 
-  network_rules {
-    default_action             = "Deny"
-    virtual_network_subnet_ids = [azurerm_subnet.internal[each.key].id]
-  }
+  #   network_rules {
+  #     default_action             = "Deny"
+  #     virtual_network_subnet_ids = [azurerm_subnet.internal[each.key].id]
+  #   }
   depends_on = [azurerm_subnet.internal]
 }
 
