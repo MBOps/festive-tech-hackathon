@@ -9,7 +9,7 @@ terraform {
 }
 # Configure the AzureRM provider (using v2.1)
 provider "azurerm" {
-  version         = "=2.39.0"
+  version         = ">=2.39.0"
   subscription_id = var.subscription_id
   features {}
 }
