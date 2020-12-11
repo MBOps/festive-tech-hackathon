@@ -160,12 +160,12 @@ resource "azurerm_app_service_virtual_network_swift_connection" "vnetconnection"
   depends_on     = [azurerm_subnet.internal, azurerm_app_service.webapp]
 }
 
-resource "azurerm_application_insights" "appinsights" {
-  name                = "${var.resource_prefix}-appinsights"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  application_type    = "web"
-}
+# resource "azurerm_application_insights" "appinsights" {
+#   name                = "${var.resource_prefix}-appinsights"
+#   location            = azurerm_resource_group.rg.location
+#   resource_group_name = azurerm_resource_group.rg.name
+#   application_type    = "web"
+# }
 
 resource "azurerm_monitor_autoscale_setting" "autoscaling" {
   for_each            = var.regions
