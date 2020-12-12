@@ -144,37 +144,37 @@ resource "azurerm_storage_account" "storage" {
 #   distinctregions = distinct(split("-", var.regions.key)[0])
 # }
 
-# resource "azurerm_app_service" "webapp" {
-#   for_each            = var.regions
-#   name                = "${var.resource_prefix}-${tostring(element([each.value], 1))}-webapp"
-#   location            = each.value
-#   resource_group_name = azurerm_resource_group.rg.name
-#   app_service_plan_id = azurerm_app_service_plan.asp[each.key].id
+resource "azurerm_app_service" "webapp" {
+  for_each            = var.regions
+  name                = "${var.resource_prefix}-${each.value.shortname}-webapp"
+  location            = each.value.name
+  resource_group_name = azurerm_resource_group.rg.name
+  app_service_plan_id = azurerm_app_service_plan.asp[each.key].id
 
-#   # Do not attach Storage by default
-#   app_settings = {
-#     "storageContainerName" = "${var.resource_prefix}-${tostring(element([each.value], 1))}"
-#     "connectionString"     = "${azurerm_storage_account.storage[each.key].primary_connection_string}"
+  # Do not attach Storage by default
+  app_settings = {
+    "storageContainerName" = "${var.resource_prefix}-${each.value.shortname}"
+    "connectionString"     = "${azurerm_storage_account.storage[each.key].primary_connection_string}"
 
-#     # Settings for private Container Registires  
-#     DOCKER_REGISTRY_SERVER_URL      = "https://${var.registry_name}"
-#     DOCKER_REGISTRY_SERVER_USERNAME = "${var.admin_username}"
-#     DOCKER_REGISTRY_SERVER_PASSWORD = "${var.admin_password}"
-#     # APPINSIGHTS_INSTRUMENTATIONKEY = "${azurerm_application_insights.appinsights.instrumentation_key}"
-#   }
+    # Settings for private Container Registires  
+    DOCKER_REGISTRY_SERVER_URL      = "https://${var.registry_name}"
+    DOCKER_REGISTRY_SERVER_USERNAME = "${var.admin_username}"
+    DOCKER_REGISTRY_SERVER_PASSWORD = "${var.admin_password}"
+    # APPINSIGHTS_INSTRUMENTATIONKEY = "${azurerm_application_insights.appinsights.instrumentation_key}"
+  }
 
-#   # Configure Docker Image to load on start
-#   site_config {
-#     linux_fx_version = "DOCKER|${var.registry_name}/festive-tech:${var.tag_name}"
-#     always_on        = "true"
-#   }
+  # Configure Docker Image to load on start
+  site_config {
+    linux_fx_version = "DOCKER|${var.registry_name}/festive-tech:${var.tag_name}"
+    always_on        = "true"
+  }
 
-#   identity {
-#     type = "SystemAssigned"
-#   }
+  identity {
+    type = "SystemAssigned"
+  }
 
-#   depends_on = [azurerm_storage_account.storage, azurerm_app_service_plan.asp]
-# }
+  depends_on = [azurerm_storage_account.storage, azurerm_app_service_plan.asp]
+}
 
 # resource "azurerm_app_service_virtual_network_swift_connection" "vnetconnection" {
 #   for_each       = var.regions
