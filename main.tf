@@ -100,11 +100,11 @@ resource "azurerm_frontdoor" "frontdoor" {
     name = "${var.resource_prefix}-Backend"
 
     dynamic "backend" {
-      for_each = var.regions
+      for_each = var.distinctregions
 
       content {
-        host_header = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
-        address     = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
+        host_header = "${var.resource_prefix}-${[backend.key]}.azurewebsites.net"
+        address     = "${var.resource_prefix}-${[backend.key]}.azurewebsites.net"
         http_port   = 80
         https_port  = 443
       }
