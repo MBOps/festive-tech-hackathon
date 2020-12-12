@@ -62,12 +62,12 @@ resource "azurerm_storage_account" "storage" {
   account_tier             = "Standard"
   account_replication_type = "GRS"
   min_tls_version          = "TLS1_2"
-  #   allow_blob_public_access = false
+  allow_blob_public_access = false
 
-  #   network_rules {
-  #     default_action             = "Deny"
-  #     virtual_network_subnet_ids = [azurerm_subnet.internal[each.key].id]
-  #   }
+  network_rules {
+    default_action             = "Deny"
+    virtual_network_subnet_ids = [azurerm_subnet.internal[each.key].id]
+  }
   depends_on = [azurerm_subnet.internal]
 }
 
@@ -96,41 +96,41 @@ resource "azurerm_frontdoor" "frontdoor" {
     name = "${var.resource_prefix}-HealthProbeSetting1"
   }
 
-  #   backend_pool {
-  #     name = "${var.resource_prefix}-Backend"
+  backend_pool {
+    name = "${var.resource_prefix}-Backend"
 
-  #     dynamic "backend" {
-  #       for_each = var.regions
+    dynamic "backend" {
+      for_each = var.regions
 
-  #       content {
-  #         host_header = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
-  #         address     = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
-  #         http_port   = 80
-  #         https_port  = 443
-  #       }
-  #     }
-
-  #     load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
-  #     health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
-  #   }
-
-  dynamic "backend_pool" {
-    for_each = var.regions
-
-    content {
-      name                = "${var.resource_prefix}-Backend"
-      load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
-      health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
-
-      backend {
-        host_header = "${azurerm_app_service.webapp[backend_pool.key].name}.azurewebsites.net"
-        address     = "${azurerm_app_service.webapp[backend_pool.key].name}.azurewebsites.net"
+      content {
+        host_header = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
+        address     = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
         http_port   = 80
         https_port  = 443
       }
     }
 
+    load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
+    health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
   }
+
+  #   dynamic "backend_pool" {
+  #     for_each = var.regions
+
+  #     content {
+  #       name                = "${var.resource_prefix}-Backend"
+  #       load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
+  #       health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
+
+  #       backend {
+  #         host_header = "${azurerm_app_service.webapp[backend_pool.key].name}.azurewebsites.net"
+  #         address     = "${azurerm_app_service.webapp[backend_pool.key].name}.azurewebsites.net"
+  #         http_port   = 80
+  #         https_port  = 443
+  #       }
+  #     }
+
+  #   }
 
   frontend_endpoint {
     name                              = "${var.resource_prefix}-FrontendEndpoint1"
@@ -140,9 +140,9 @@ resource "azurerm_frontdoor" "frontdoor" {
   depends_on = [azurerm_app_service.webapp]
 }
 
-locals {
-  distinctregions = distinct(split("-", var.regions.key)[0])
-}
+# locals {
+#   distinctregions = distinct(split("-", var.regions.key)[0])
+# }
 
 resource "azurerm_app_service" "webapp" {
   for_each            = var.regions
@@ -176,12 +176,12 @@ resource "azurerm_app_service" "webapp" {
   depends_on = [azurerm_storage_account.storage, azurerm_app_service_plan.asp]
 }
 
-# resource "azurerm_app_service_virtual_network_swift_connection" "vnetconnection" {
-#   for_each       = var.regions
-#   app_service_id = azurerm_app_service.webapp[each.key].id
-#   subnet_id      = azurerm_subnet.internal[each.key].id
-#   depends_on     = [azurerm_subnet.internal, azurerm_app_service.webapp]
-# }
+resource "azurerm_app_service_virtual_network_swift_connection" "vnetconnection" {
+  for_each       = var.regions
+  app_service_id = azurerm_app_service.webapp[each.key].id
+  subnet_id      = azurerm_subnet.internal[each.key].id
+  depends_on     = [azurerm_subnet.internal, azurerm_app_service.webapp]
+}
 
 # resource "azurerm_application_insights" "appinsights" {
 #   name                = "${var.resource_prefix}-appinsights"
