@@ -140,9 +140,9 @@ resource "azurerm_frontdoor" "frontdoor" {
   depends_on = [azurerm_app_service.webapp]
 }
 
-# locals {
-#   distinctregions = distinct(split("-", var.regions.key)[0])
-# }
+locals {
+  distinctregions = distinct(var.regions.region)
+}
 
 resource "azurerm_app_service" "webapp" {
   for_each            = var.regions
