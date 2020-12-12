@@ -45,6 +45,24 @@ variable "regions" {
   }
 }
 
+variable "geos" {
+  default = {
+    eu = {
+      geo = "eu"
+      regions = {
+        eu-west  = { name = "West Europe", shortname = "euw", region = "eu" }
+        eu-north = { name = "North Europe", shortname = "eun", region = "eu" }
+      }
+    }
+    uk = {
+      geo = "uk"
+      regions = {
+        uk-south = { name = "UK South", shortname = "uks", region = "uk" }
+      }
+    }
+  }
+}
+
 variable "regions2" {
   description = "Regions to be used"
   default = {
