@@ -23,7 +23,7 @@ resource "azurerm_resource_group" "rg" {
 # Provision the App Service plan to host the App Service web app in each region
 resource "azurerm_app_service_plan" "asp" {
   for_each            = var.regions
-  name                = "${var.resource_prefix}-${element([each.value], 1)}-asp"
+  name                = "${var.resource_prefix}-${tostring(element([each.value], 1))}-asp"
   location            = each.value
   resource_group_name = azurerm_resource_group.rg.name
   #   kind                = "Windows"
@@ -56,7 +56,7 @@ resource "azurerm_app_service_plan" "asp" {
 # Provision the Azure Storage Account 
 resource "azurerm_storage_account" "storage" {
   for_each                 = var.regions
-  name                     = replace(lower("${var.resource_prefix}-${element([each.value], 1)}-sa"), "-", "")
+  name                     = replace(lower("${var.resource_prefix}-${tostring(element([each.value], 1))}-sa"), "-", "")
   location                 = each.value
   resource_group_name      = azurerm_resource_group.rg.name
   account_tier             = "Standard"
@@ -146,14 +146,14 @@ resource "azurerm_frontdoor" "frontdoor" {
 
 resource "azurerm_app_service" "webapp" {
   for_each            = var.regions
-  name                = "${var.resource_prefix}-${element([each.value], 1)}-webapp"
+  name                = "${var.resource_prefix}-${tostring(element([each.value], 1))}-webapp"
   location            = each.value
   resource_group_name = azurerm_resource_group.rg.name
   app_service_plan_id = azurerm_app_service_plan.asp[each.key].id
 
   # Do not attach Storage by default
   app_settings = {
-    "storageContainerName" = "${var.resource_prefix}-${element([each.value], 1)}"
+    "storageContainerName" = "${var.resource_prefix}-${tostring(element([each.value], 1))}"
     "connectionString"     = "${azurerm_storage_account.storage[each.key].primary_connection_string}"
 
     # Settings for private Container Registires  
@@ -192,7 +192,7 @@ resource "azurerm_app_service" "webapp" {
 
 resource "azurerm_monitor_autoscale_setting" "autoscaling" {
   for_each            = var.regions
-  name                = "${var.resource_prefix}-${element([each.value], 1)}-scaling"
+  name                = "${var.resource_prefix}-${tostring(element([each.value], 1))}-scaling"
   location            = each.value
   resource_group_name = azurerm_resource_group.rg.name
   target_resource_id  = azurerm_app_service_plan.asp[each.key].id
