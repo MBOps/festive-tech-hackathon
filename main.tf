@@ -97,7 +97,8 @@ resource "azurerm_frontdoor" "frontdoor" {
   }
 
   backend_pool {
-    name = "${var.resource_prefix}-Backend"
+    for_each = var.regions
+    name     = "${var.resource_prefix}-${split("-", backend.key)[0]}-Backend"
 
     dynamic "backend" {
       for_each = var.regions
