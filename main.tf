@@ -23,8 +23,8 @@ resource "azurerm_resource_group" "rg" {
 # Provision the App Service plan to host the App Service web app in each region
 resource "azurerm_app_service_plan" "asp" {
   for_each            = var.regions
-  name                = "${var.resource_prefix}-${[each.value.shortname]}-asp"
-  location            = each.value
+  name                = "${var.resource_prefix}-${each.value.shortname}-asp"
+  location            = each.value.name
   resource_group_name = azurerm_resource_group.rg.name
   #   kind                = "Windows"
   kind     = "Linux"
