@@ -142,7 +142,7 @@ resource "azurerm_frontdoor" "frontdoor" {
 
 locals {
   distinctregions = distinct([for region_key, region in var.regions : {
-      region = region
+    region = region
   }])
 }
 
