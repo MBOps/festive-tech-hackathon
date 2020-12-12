@@ -141,9 +141,7 @@ resource "azurerm_storage_account" "storage" {
 # }
 
 locals {
-  distinctregions = distinct([for region_key, region in var.regions : {
-    region = region
-  }])
+  distinctregions = distinct([for region in var.regions : region])
 }
 
 output "instance_ip_addr" {
