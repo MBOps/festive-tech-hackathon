@@ -118,7 +118,7 @@ resource "azurerm_frontdoor" "frontdoor" {
     for_each = var.regions
 
     content {
-      name                = "${var.resource_prefix}-${split("-", tostring([backend_pool.key]))[0]}-Backend"
+      name                = "${var.resource_prefix}-Backend"
       load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
       health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
 
@@ -138,6 +138,10 @@ resource "azurerm_frontdoor" "frontdoor" {
     custom_https_provisioning_enabled = false
   }
   depends_on = [azurerm_app_service.webapp]
+}
+
+locals {
+  distinctregions = distinct(split("-", var.regions.key)[0])
 }
 
 resource "azurerm_app_service" "webapp" {
