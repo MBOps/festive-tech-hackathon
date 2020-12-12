@@ -100,7 +100,7 @@ resource "azurerm_frontdoor" "frontdoor" {
     name = "${var.resource_prefix}-Backend"
 
     dynamic "backend" {
-      for_each = locals.distinctregions
+      for_each = local.distinctregions
 
       content {
         host_header = "${var.resource_prefix}-${[backend.key]}.azurewebsites.net"
