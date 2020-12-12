@@ -118,13 +118,13 @@ resource "azurerm_frontdoor" "frontdoor" {
     for_each = var.regions
 
     content {
-      name                = "${var.resource_prefix}-Backend"
+      name                = "${var.resource_prefix}-${split("-", [backend_pool.key])[0]}-Backend"
       load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
       health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
 
       backend {
-        host_header = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
-        address     = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
+        host_header = "${azurerm_app_service.webapp[backend_pool.key].name}.azurewebsites.net"
+        address     = "${azurerm_app_service.webapp[backend_pool.key].name}.azurewebsites.net"
         http_port   = 80
         https_port  = 443
       }
