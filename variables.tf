@@ -39,7 +39,7 @@ variable "repo_url" {
 
 variable "regions" {
   default = {
-    eu-west = "West Europe"
+    "eu-west" = "West Europe"
   }
 }
 
