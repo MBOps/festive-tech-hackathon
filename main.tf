@@ -141,7 +141,7 @@ resource "azurerm_frontdoor" "frontdoor" {
 }
 
 locals {
-  distinctregions = distinct(var.regions.*)
+  distinctregions = distinct(values(var.regions.region))
 }
 
 resource "azurerm_app_service" "webapp" {
