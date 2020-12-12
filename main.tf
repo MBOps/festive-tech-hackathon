@@ -146,6 +146,10 @@ locals {
   }])
 }
 
+output "instance_ip_addr" {
+  value = local.distinctregions
+}
+
 resource "azurerm_app_service" "webapp" {
   for_each            = var.regions
   name                = "${var.resource_prefix}-${each.value.shortname}-webapp"
