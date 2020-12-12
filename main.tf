@@ -96,14 +96,33 @@ resource "azurerm_frontdoor" "frontdoor" {
     name = "${var.resource_prefix}-HealthProbeSetting1"
   }
 
-  backend_pool {
+  #   backend_pool {
+  #     name = "${var.resource_prefix}-Backend"
+
+  #     dynamic "backend" {
+  #       for_each = var.regions
+
+  #       content {
+  #         host_header = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
+  #         address     = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
+  #         http_port   = 80
+  #         https_port  = 443
+  #       }
+  #     }
+
+  #     load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
+  #     health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
+  #   }
+
+  dynamic "backend_pool" {
     for_each = var.regions
-    name     = "${var.resource_prefix}-${split("-", [each.key])[0]}-Backend"
 
-    dynamic "backend" {
-      for_each = var.regions
+    content {
+      name                = "${var.resource_prefix}-Backend"
+      load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
+      health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
 
-      content {
+      backend {
         host_header = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
         address     = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
         http_port   = 80
@@ -111,8 +130,6 @@ resource "azurerm_frontdoor" "frontdoor" {
       }
     }
 
-    load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
-    health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
   }
 
   frontend_endpoint {
