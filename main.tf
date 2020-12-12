@@ -118,7 +118,7 @@ resource "azurerm_frontdoor" "frontdoor" {
     for_each = var.regions
 
     content {
-      name                = "${var.resource_prefix}-${split("-", [backend_pool.key])[0]}-Backend"
+      name                = "${var.resource_prefix}-${split("-", tostring([backend_pool.key]))[0]}-Backend"
       load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
       health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
 
