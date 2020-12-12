@@ -23,7 +23,7 @@ resource "azurerm_resource_group" "rg" {
 # Provision the App Service plan to host the App Service web app in each region
 resource "azurerm_app_service_plan" "asp" {
   for_each            = var.regions
-  name                = "${var.resource_prefix}-${var.short_names[each.key]}-asp"
+  name                = "${var.resource_prefix}-${[each.value][1]}-asp"
   location            = each.value
   resource_group_name = azurerm_resource_group.rg.name
   #   kind                = "Windows"
@@ -37,7 +37,7 @@ resource "azurerm_app_service_plan" "asp" {
 
 resource "azurerm_virtual_network" "vnet" {
   for_each            = var.regions
-  name                = "${var.resource_prefix}-${var.short_names[each.key]}-vnet"
+  name                = "${var.resource_prefix}-${[each.value][1]}-vnet"
   location            = each.value
   resource_group_name = azurerm_resource_group.rg.name
   address_space       = ["10.1.1.0/24"]
@@ -56,18 +56,18 @@ resource "azurerm_subnet" "internal" {
 # Provision the Azure Storage Account 
 resource "azurerm_storage_account" "storage" {
   for_each                 = var.regions
-  name                     = replace(lower("${var.resource_prefix}-${var.short_names[each.key]}-sa"), "-", "")
+  name                     = replace(lower("${var.resource_prefix}-${[each.value][1]}-sa"), "-", "")
   location                 = each.value
   resource_group_name      = azurerm_resource_group.rg.name
   account_tier             = "Standard"
   account_replication_type = "GRS"
   min_tls_version          = "TLS1_2"
-  allow_blob_public_access = false
+  #   allow_blob_public_access = false
 
-  network_rules {
-    default_action             = "Deny"
-    virtual_network_subnet_ids = [azurerm_subnet.internal[each.key].id]
-  }
+  #   network_rules {
+  #     default_action             = "Deny"
+  #     virtual_network_subnet_ids = [azurerm_subnet.internal[each.key].id]
+  #   }
   depends_on = [azurerm_subnet.internal]
 }
 
@@ -146,14 +146,14 @@ resource "azurerm_frontdoor" "frontdoor" {
 
 resource "azurerm_app_service" "webapp" {
   for_each            = var.regions
-  name                = "${var.resource_prefix}-${var.short_names[each.key]}-webapp"
+  name                = "${var.resource_prefix}-${[each.value][1]}-webapp"
   location            = each.value
   resource_group_name = azurerm_resource_group.rg.name
   app_service_plan_id = azurerm_app_service_plan.asp[each.key].id
 
   # Do not attach Storage by default
   app_settings = {
-    "storageContainerName" = "${var.resource_prefix}-${var.short_names[each.key]}"
+    "storageContainerName" = "${var.resource_prefix}-${[each.value][1]}"
     "connectionString"     = "${azurerm_storage_account.storage[each.key].primary_connection_string}"
 
     # Settings for private Container Registires  
@@ -176,12 +176,12 @@ resource "azurerm_app_service" "webapp" {
   depends_on = [azurerm_storage_account.storage, azurerm_app_service_plan.asp]
 }
 
-resource "azurerm_app_service_virtual_network_swift_connection" "vnetconnection" {
-  for_each       = var.regions
-  app_service_id = azurerm_app_service.webapp[each.key].id
-  subnet_id      = azurerm_subnet.internal[each.key].id
-  depends_on     = [azurerm_subnet.internal, azurerm_app_service.webapp]
-}
+# resource "azurerm_app_service_virtual_network_swift_connection" "vnetconnection" {
+#   for_each       = var.regions
+#   app_service_id = azurerm_app_service.webapp[each.key].id
+#   subnet_id      = azurerm_subnet.internal[each.key].id
+#   depends_on     = [azurerm_subnet.internal, azurerm_app_service.webapp]
+# }
 
 # resource "azurerm_application_insights" "appinsights" {
 #   name                = "${var.resource_prefix}-appinsights"
@@ -192,7 +192,7 @@ resource "azurerm_app_service_virtual_network_swift_connection" "vnetconnection"
 
 resource "azurerm_monitor_autoscale_setting" "autoscaling" {
   for_each            = var.regions
-  name                = "${var.resource_prefix}-${var.short_names[each.key]}-scaling"
+  name                = "${var.resource_prefix}-${[each.value][1]}-scaling"
   location            = each.value
   resource_group_name = azurerm_resource_group.rg.name
   target_resource_id  = azurerm_app_service_plan.asp[each.key].id

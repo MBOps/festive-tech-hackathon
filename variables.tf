@@ -39,12 +39,12 @@ variable "repo_url" {
 
 variable "regions" {
   default = {
-    "eu-west" = "West Europe"
+    "eu-west" = ["West Europe", "euw"]
   }
 }
 
 variable "regions2" {
-  description = "Regions to be used to deploy too"
+  description = "Regions to be used"
   default = {
     us-west          = "West US"
     us-west-2        = "West US 2"
