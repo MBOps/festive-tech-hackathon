@@ -64,6 +64,29 @@ variable "geos" {
   }
 }
 
+variable "geos2" {
+  type = list(object({
+    geo_id = string
+    regions = list(object({
+      id        = string
+      name      = string
+      shortname = string
+    }))
+  }))
+
+  default = [
+    { geo_id = "eu"
+      regions = [
+        { id = "eu-west", name = "West Europe", shortname = "euw" },
+        { id = "eu-north", name = "North Europe", shortname = "eun" }
+    ] },
+    { geo_id = "uk"
+      regions = [
+        { id = "uk-south", name = "UK South", shortname = "uks" }
+    ] }
+  ]
+}
+
 variable "regions2" {
   description = "Regions to be used"
   default = {
