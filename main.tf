@@ -119,7 +119,7 @@ resource "azurerm_frontdoor" "frontdoor" {
     #for_each = var.geos
     for_each = { for geo in var.geos : geo.name => geo }
     content {
-      name                = "${var.resource_prefix}-${[backend_pool.value.name]}-Backend"
+      name                = "${var.resource_prefix}-${[backend_pool.key]}-Backend"
       load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
       health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
 
@@ -137,8 +137,8 @@ resource "azurerm_frontdoor" "frontdoor" {
         #for_each = backend_pool.value.regions
         #for_each = { for region in backend_pool.value.regions : region.region_key => region }
         #content {
-        host_header = "${var.resource_prefix}-${[backend_pool.value.name]}.azurewebsites.net"
-        address     = "${var.resource_prefix}-${[backend_pool.value.name]}.azurewebsites.net"
+        host_header = "${var.resource_prefix}-${[backend_pool.key]}.azurewebsites.net"
+        address     = "${var.resource_prefix}-${[backend_pool.key]}.azurewebsites.net"
         http_port   = 80
         https_port  = 443
         #}
