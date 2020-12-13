@@ -144,10 +144,10 @@ locals {
   #distinctregions = distinct([for region in var.regions : region])
   #allregions = flatten(var.geos)
 
-    allregions = flatten([
-      for geo in var.geos : [
-      ]
-    ])
+  allregions = flatten([
+    for geo in var.geos : [
+    ]
+  ])
 }
 
 output "instance_ip_addr" {
