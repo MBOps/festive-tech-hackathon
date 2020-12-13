@@ -77,12 +77,12 @@ variable "geos2" {
   default = [
     { geo_id = "eu"
       regions = [
-        { id = "eu-west", name = "West Europe", shortname = "euw" },
-        { id = "eu-north", name = "North Europe", shortname = "eun" }
+        { region_id = "eu-west", name = "West Europe", shortname = "euw" },
+        { region_id = "eu-north", name = "North Europe", shortname = "eun" }
     ] },
     { geo_id = "uk"
       regions = [
-        { id = "uk-south", name = "UK South", shortname = "uks" }
+        { region_id = "uk-south", name = "UK South", shortname = "uks" }
     ] }
   ]
 }
