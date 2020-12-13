@@ -22,7 +22,7 @@ resource "azurerm_resource_group" "rg" {
 
 # Provision the App Service plan to host the App Service web app in each region
 resource "azurerm_app_service_plan" "asp" {
-  for_each            = var.regions
+  for_each            = { for region in local.allregions : region.region_key => region }
   name                = "${var.resource_prefix}-${each.value.shortname}-asp"
   location            = each.value.name
   resource_group_name = azurerm_resource_group.rg.name
@@ -36,7 +36,7 @@ resource "azurerm_app_service_plan" "asp" {
 }
 
 resource "azurerm_virtual_network" "vnet" {
-  for_each            = var.regions
+  for_each            = { for region in local.allregions : region.region_key => region }
   name                = "${var.resource_prefix}-${each.value.shortname}-vnet"
   location            = each.value.name
   resource_group_name = azurerm_resource_group.rg.name
@@ -44,7 +44,7 @@ resource "azurerm_virtual_network" "vnet" {
 }
 
 resource "azurerm_subnet" "internal" {
-  for_each             = var.regions
+  for_each             = { for region in local.allregions : region.region_key => region }
   name                 = "internal"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet[each.key].name
@@ -157,20 +157,20 @@ locals {
   ])
 }
 
-output "instance_ip_addr" {
-  value = local.allregions
-}
+# output "instance_ip_addr" {
+#   value = local.allregions
+# }
 
 # output "instance_ip_addr2" {
 #   value = var.geos
 # }
 
-output "instance_ip_addr3" {
-  value = var.regions
-}
+# output "instance_ip_addr3" {
+#   value = var.regions
+# }
 
 resource "azurerm_app_service" "webapp" {
-  for_each            = var.regions
+  for_each            = { for region in local.allregions : region.region_key => region }
   name                = "${var.resource_prefix}-${each.value.shortname}-webapp"
   location            = each.value.name
   resource_group_name = azurerm_resource_group.rg.name
@@ -216,7 +216,7 @@ resource "azurerm_app_service" "webapp" {
 # }
 
 resource "azurerm_monitor_autoscale_setting" "autoscaling" {
-  for_each            = var.regions
+  for_each            = { for region in local.allregions : region.region_key => region }
   name                = "${var.resource_prefix}-${each.value.shortname}-scaling"
   location            = each.value.name
   resource_group_name = azurerm_resource_group.rg.name
