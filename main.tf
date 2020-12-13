@@ -193,11 +193,11 @@ output "instance_ip_addr3" {
   value = var.regions
 }
 
-output "instance_ip_addr3" {
+output "instance_ip_addr4" {
   value = local.allregions
 }
 
-output "instance_ip_addr3" {
+output "instance_ip_addr5" {
   value = local.allregions2
 }
 
