@@ -118,7 +118,7 @@ resource "azurerm_frontdoor" "frontdoor" {
   dynamic "backend_pool" {
     for_each = var.geos
     content {
-      name                = "${var.resource_prefix}-${[backend_pool.value.name]}-Backend"
+      name                = "${var.resource_prefix}-[backend_pool.value.name]-Backend"
       load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
       health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
 
