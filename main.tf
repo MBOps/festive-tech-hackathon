@@ -122,17 +122,26 @@ resource "azurerm_frontdoor" "frontdoor" {
       load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
       health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
 
-      dynamic "backend" {
+      #   dynamic "backend" {
+      #     #for_each = backend_pool.value.regions
+      #     for_each = { for region in backend_pool.value.regions : region.region_key => region }
+      #     content {
+      #       host_header = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
+      #       address     = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
+      #       http_port   = 80
+      #       https_port  = 443
+      #     }
+      #   }
+      backend {
         #for_each = backend_pool.value.regions
-        for_each = { for region in backend_pool.value.regions : region.region_key => region }
-        content {
-          host_header = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
-          address     = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
-          http_port   = 80
-          https_port  = 443
-        }
+        #for_each = { for region in backend_pool.value.regions : region.region_key => region }
+        #content {
+        host_header = "${var.resource_prefix}-${[backend_pool.value.name]}.azurewebsites.net"
+        address     = "${var.resource_prefix}-${[backend_pool.value.name]}.azurewebsites.net"
+        http_port   = 80
+        https_port  = 443
+        #}
       }
-
     }
   }
 
