@@ -97,40 +97,42 @@ resource "azurerm_frontdoor" "frontdoor" {
     name = "${var.resource_prefix}-HealthProbeSetting1"
   }
 
-#   backend_pool {
-#     name = "${var.resource_prefix}-Backend"
+  #   backend_pool {
+  #     name = "${var.resource_prefix}-Backend"
 
-#     # dynamic "backend" {
-#     #   for_each = local.regions
+  #     # dynamic "backend" {
+  #     #   for_each = local.regions
 
-#     #   content {
-#     #     host_header = "${var.resource_prefix}-${[backend.value]}.azurewebsites.net"
-#     #     address     = "${var.resource_prefix}-${[backend.value]}.azurewebsites.net"
-#     #     http_port   = 80
-#     #     https_port  = 443
-#     #   }
-#     # }
+  #     #   content {
+  #     #     host_header = "${var.resource_prefix}-${[backend.value]}.azurewebsites.net"
+  #     #     address     = "${var.resource_prefix}-${[backend.value]}.azurewebsites.net"
+  #     #     http_port   = 80
+  #     #     https_port  = 443
+  #     #   }
+  #     # }
 
-#     load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
-#     health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
-#   }
+  #     load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
+  #     health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
+  #   }
 
   dynamic "backend_pool" {
-    for_each            = var.geos
-    name                = "${var.resource_prefix}-${[each.key]}-Backend"
-    load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
-    health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
+    for_each = var.geos
+    content {
+      name                = "${var.resource_prefix}-${[backend_pool.key]}-Backend"
+      load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
+      health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
 
-    dynamic "backend" {
-      for_each = var.geo.regions
-      content {
-        host_header = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
-        address     = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
-        http_port   = 80
-        https_port  = 443
+      dynamic "backend" {
+        for_each = backend_pool.regions
+        content {
+          host_header = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
+          address     = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
+          http_port   = 80
+          https_port  = 443
+        }
       }
-    }
 
+    }
   }
 
   frontend_endpoint {
