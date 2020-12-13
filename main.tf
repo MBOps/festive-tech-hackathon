@@ -119,7 +119,7 @@ resource "azurerm_frontdoor" "frontdoor" {
     #for_each = var.geos
     for_each = { for geo in var.geos2 : geo.geo_id => geo }
     content {
-      name                = "${var.resource_prefix}-${[backend_pool.key]}-Backend"
+      name                = "${var.resource_prefix}-${[backend_pool.value.geo_id]}-Backend"
       load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
       health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
 
