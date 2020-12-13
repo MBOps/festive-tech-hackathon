@@ -142,18 +142,20 @@ resource "azurerm_storage_account" "storage" {
 
 locals {
   #distinctregions = distinct([for region in var.regions : region])
-  allregions = flatten(var.geos)
+  #allregions = flatten(var.geos)
 
-  #   allregions = flatten([
-  #     for geo in var.geos : [
-  #       for region_key in geos.regions : {
-  #       }
-  #     ]
-  #   ])
+    allregions = flatten([
+      for geo in var.geos : [
+      ]
+    ])
 }
 
 output "instance_ip_addr" {
   value = local.allregions
+}
+
+output "instance_ip_addr" {
+  value = var.geos
 }
 
 resource "azurerm_app_service" "webapp" {
