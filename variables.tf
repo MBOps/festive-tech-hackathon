@@ -47,13 +47,13 @@ variable "regions" {
 
 variable "geos" {
   default = {
-    eu = {
-      name = "eu"
-      regions = {
-        eu-west  = { name = "West Europe", shortname = "euw" }
-        eu-north = { name = "North Europe", shortname = "eun" }
-      }
-    }
+    # eu = {
+    #   name = "eu"
+    #   regions = {
+    #     eu-west  = { name = "West Europe", shortname = "euw" }
+    #     eu-north = { name = "North Europe", shortname = "eun" }
+    #   }
+    # }
 
     uk = {
       regions = {
