@@ -117,7 +117,7 @@ resource "azurerm_frontdoor" "frontdoor" {
 
   dynamic "backend_pool" {
     #for_each = var.geos
-    for_each = { for geo in var.geos2 : geo.id => geo }
+    for_each = { for geo in var.geos2 : geo.geo_id => geo }
     content {
       name                = "${var.resource_prefix}-${[backend_pool.key]}-Backend"
       load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
