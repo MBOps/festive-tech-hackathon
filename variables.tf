@@ -50,14 +50,14 @@ variable "geos" {
     eu = {
       name = "eu"
       regions = {
-        eu-west  = { name = "West Europe", shortname = "euw", region = "eu" }
-        eu-north = { name = "North Europe", shortname = "eun", region = "eu" }
+        eu-west  = { name = "West Europe", shortname = "euw" }
+        eu-north = { name = "North Europe", shortname = "eun" }
       }
     }
 
     uk = {
       regions = {
-        uk-south = { name = "UK South", shortname = "uks", region = "uk" }
+        uk-south = { name = "UK South", shortname = "uks" }
       }
     }
   }
