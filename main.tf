@@ -156,9 +156,9 @@ output "instance_ip_addr" {
   value = local.allregions
 }
 
-output "instance_ip_addr2" {
-  value = var.geos
-}
+# output "instance_ip_addr2" {
+#   value = var.geos
+# }
 
 output "instance_ip_addr3" {
   value = var.regions
