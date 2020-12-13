@@ -55,7 +55,8 @@ resource "azurerm_subnet" "internal" {
 
 # Provision the Azure Storage Account 
 resource "azurerm_storage_account" "storage" {
-  for_each                 = var.regions
+  for_each = { for region in local.allregions : region.region_key => region }
+  #for_each                 = var.regions
   name                     = replace(lower("${var.resource_prefix}-${each.value.shortname}-sa"), "-", "")
   location                 = each.value.name
   resource_group_name      = azurerm_resource_group.rg.name
