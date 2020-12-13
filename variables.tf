@@ -56,8 +56,9 @@ variable "geos" {
     }
 
     uk = {
-      uk-south = { name = "UK South", shortname = "uks", region = "uk" }
-
+      regions = {
+        uk-south = { name = "UK South", shortname = "uks", region = "uk" }
+      }
     }
   }
 }
