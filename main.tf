@@ -170,9 +170,9 @@ locals {
   ])
 
   allregions2 = flatten([
-    for geo_key, geo in var.geos2 : [
-      for region_key, region in geo.regions : {
-        region_key = region_key
+    for geo_id, geo in var.geos2 : [
+      for region_id, region in geo.regions : {
+        region_id = region_id
         name       = region.name
         shortname  = region.shortname
       }
