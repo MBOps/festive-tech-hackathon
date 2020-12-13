@@ -168,6 +168,17 @@ locals {
     ]
 
   ])
+
+  allregions2 = flatten([
+    for geo_key, geo in var.geos2 : [
+      for region_key, region in geo.regions : {
+        region_key = region_key
+        name       = region.name
+        shortname  = region.shortname
+      }
+    ]
+
+  ])
 }
 
 output "instance_ip_addr" {
@@ -180,6 +191,14 @@ output "instance_ip_addr2" {
 
 output "instance_ip_addr3" {
   value = var.regions
+}
+
+output "instance_ip_addr3" {
+  value = local.allregions
+}
+
+output "instance_ip_addr3" {
+  value = local.allregions2
 }
 
 resource "azurerm_app_service" "webapp" {
