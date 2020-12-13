@@ -145,7 +145,9 @@ locals {
   #allregions = flatten(var.geos)
 
   allregions = flatten([
-    for geo in var.geos : geo
+    for geo in var.geos : [
+      for region in geo.regions : region
+    ]
   ])
 }
 
