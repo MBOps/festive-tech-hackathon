@@ -39,7 +39,9 @@ variable "repo_url" {
 
 variable "regions" {
   default = {
-    eu-west = { name = "West Europe", shortname = "euw", region = "eu" }
+    eu-west  = { name = "West Europe", shortname = "euw", region = "eu" }
+    uk-south = { name = "UK South", shortname = "uks", region = "uk" }
+    eu-north = { name = "North Europe", shortname = "eun", region = "eu" }
   }
 }
 
