@@ -68,7 +68,7 @@ variable "geos2" {
   type = list(object({
     geo_id = string
     regions = list(object({
-      id        = string
+      region_id = string
       name      = string
       shortname = string
     }))
