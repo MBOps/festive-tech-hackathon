@@ -123,7 +123,7 @@ resource "azurerm_frontdoor" "frontdoor" {
       health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
 
       dynamic "backend" {
-        for_each = backend_pool.regions
+        for_each = backend_pool.value.regions
         content {
           host_header = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
           address     = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
