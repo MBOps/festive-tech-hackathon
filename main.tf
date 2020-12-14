@@ -157,7 +157,7 @@ resource "azurerm_app_service" "webapp" {
 
   # Configure Docker Image to load on start
   site_config {
-    linux_fx_version = "DOCKER|${var.registry_name}/festive-tech:${each.value.tag != "" ? each.value.tag : var.tag_name}"
+    linux_fx_version = "DOCKER|${var.registry_name}/festive-tech:${lookup([each.value], "tag", "default" )}"
     always_on        = "true"
   }
 
