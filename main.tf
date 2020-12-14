@@ -22,7 +22,7 @@ resource "azurerm_resource_group" "rg" {
 
 # Provision the App Service plan to host the App Service web app in each region
 resource "azurerm_app_service_plan" "asp" {
-  for_each            = { for region in local.allregions2 : region.region_id => region }
+  for_each            = { for region in local.allregions : region.region_key => region }
   name                = "${var.resource_prefix}-${each.value.shortname}-asp"
   location            = each.value.name
   resource_group_name = azurerm_resource_group.rg.name
@@ -177,12 +177,12 @@ locals {
 
   ])
 
-  allregions2 = flatten([
-    for geo_id, geo in var.geos2 : [
-      for region_id, region in geo.regions : region
-    ]
+  #   allregions2 = flatten([
+  #     for geo_id, geo in var.geos2 : [
+  #       for region_id, region in geo.regions : region
+  #     ]
 
-  ])
+  #   ])
 }
 
 # output "instance_ip_addr" {
