@@ -75,31 +75,31 @@ resource "azurerm_storage_account" "storage" {
 # # Provision the Azure FrontDoor
 resource "azurerm_frontdoor" "frontdoor" {
   for_each                                     = { for geo in var.geos2 : geo.geo_id => geo }
-  name                                         = "${var.resource_prefix}-${backend_pool.key}-frontdoor"
+  name                                         = "${var.resource_prefix}-${each.key}-frontdoor"
   resource_group_name                          = azurerm_resource_group.rg.name
   enforce_backend_pools_certificate_name_check = false
 
   routing_rule {
-    name               = "${var.resource_prefix}-${backend_pool.key}-RoutingRule1"
+    name               = "${var.resource_prefix}-${each.key}-RoutingRule1"
     accepted_protocols = ["Http", "Https"]
     patterns_to_match  = ["/*"]
-    frontend_endpoints = ["${var.resource_prefix}-${backend_pool.key}-FrontendEndpoint1"]
+    frontend_endpoints = ["${var.resource_prefix}-${each.key}-FrontendEndpoint1"]
     forwarding_configuration {
       forwarding_protocol = "MatchRequest"
-      backend_pool_name   = "${var.resource_prefix}-${backend_pool.key}-Backend"
+      backend_pool_name   = "${var.resource_prefix}-${each.key}-Backend"
     }
   }
 
   backend_pool_load_balancing {
-    name = "${var.resource_prefix}-${backend_pool.key}-LoadBalancingSettings1"
+    name = "${var.resource_prefix}-${each.key}-LoadBalancingSettings1"
   }
 
   backend_pool_health_probe {
-    name = "${var.resource_prefix}-${backend_pool.key}-HealthProbeSetting1"
+    name = "${var.resource_prefix}-${each.key}-HealthProbeSetting1"
   }
 
   backend_pool {
-    name = "${var.resource_prefix}-${backend_pool.key}-Backend"
+    name = "${var.resource_prefix}-${each.key}-Backend"
 
     # dynamic "backend" {
     #   for_each = local.regions
@@ -113,14 +113,14 @@ resource "azurerm_frontdoor" "frontdoor" {
     # }
 
     backend {
-      host_header = "${var.resource_prefix}-${backend_pool.key}.azurewebsites.net"
-      address     = "${var.resource_prefix}-${backend_pool.key}.azurewebsites.net"
+      host_header = "${var.resource_prefix}-${each.key}.azurewebsites.net"
+      address     = "${var.resource_prefix}-${each.key}.azurewebsites.net"
       http_port   = 80
       https_port  = 443
     }
 
-    load_balancing_name = "${var.resource_prefix}-${backend_pool.key}-LoadBalancingSettings1"
-    health_probe_name   = "${var.resource_prefix}-${backend_pool.key}-HealthProbeSetting1"
+    load_balancing_name = "${var.resource_prefix}-${each.key}-LoadBalancingSettings1"
+    health_probe_name   = "${var.resource_prefix}-${each.key}-HealthProbeSetting1"
   }
 
   #   dynamic "backend_pool" {
@@ -155,8 +155,8 @@ resource "azurerm_frontdoor" "frontdoor" {
   #   }
 
   frontend_endpoint {
-    name                              = "${var.resource_prefix}-${backend_pool.key}-FrontendEndpoint1"
-    host_name                         = "${var.resource_prefix}-${backend_pool.key}-frontdoor.azurefd.net"
+    name                              = "${var.resource_prefix}-${each.key}-FrontendEndpoint1"
+    host_name                         = "${var.resource_prefix}-${each.key}-frontdoor.azurefd.net"
     custom_https_provisioning_enabled = false
   }
   depends_on = [azurerm_app_service.webapp]
