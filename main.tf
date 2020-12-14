@@ -101,23 +101,23 @@ resource "azurerm_frontdoor" "frontdoor" {
   backend_pool {
     name = "${var.resource_prefix}-${each.key}-Backend"
 
-    # dynamic "backend" {
-    #   for_each = local.regions
+    dynamic "backend" {
+      for_each = each.regions
 
-    #   content {
-    #     host_header = "${var.resource_prefix}-${[backend.value]}.azurewebsites.net"
-    #     address     = "${var.resource_prefix}-${[backend.value]}.azurewebsites.net"
-    #     http_port   = 80
-    #     https_port  = 443
-    #   }
-    # }
-
-    backend {
-      host_header = "${var.resource_prefix}-${each.key}.azurewebsites.net"
-      address     = "${var.resource_prefix}-${each.key}.azurewebsites.net"
-      http_port   = 80
-      https_port  = 443
+      content {
+        host_header = "${var.resource_prefix}-${[backend.value.shortname]}.azurewebsites.net"
+        address     = "${azurerm_app_service.webapp[backend.value.shortname].name}.azurewebsites.net"      
+        http_port   = 80
+        https_port  = 443
+      }
     }
+
+    # backend {
+    #   host_header = "${var.resource_prefix}-${each.key}.azurewebsites.net"
+    #   address     = "${var.resource_prefix}-${each.key}.azurewebsites.net"
+    #   http_port   = 80
+    #   https_port  = 443
+    # }
 
     load_balancing_name = "${var.resource_prefix}-${each.key}-LoadBalancingSettings1"
     health_probe_name   = "${var.resource_prefix}-${each.key}-HealthProbeSetting1"
