@@ -29,7 +29,7 @@ The solution proposed uses GitHub Actions and Terraform to deploy the Infrastruc
 
 ### GitHub Actions
 
-There is a single GitHub Action created which contains two jobs. This creates and pushes a docker image to an Azure Container Registry, and then runs Terraform to deploy the infrastructure.
+There are two GitHub Action YAML files. The main file `main.yml` contains two jobs. This creates and pushes a docker image to an Azure Container Registry, and then runs Terraform to deploy the infrastructure. The second YAML file is a secondary build process `branched.yml`, it creates a docker container and pushes it to the container registry tagged with the git branch name. This will allow customisations to the code base to be built.
 
 There are a number of secrets needed for the GitHub Actions to run. The Terraform script is run in AzureCLI and requires a Service Principal User to be created and the various ID's and Secret to be kept within the repo settings.
 
@@ -38,7 +38,7 @@ There are a number of secrets needed for the GitHub Actions to run. The Terrafor
     SUBSCRIPTION_ID
     TENANT_ID
 
-It also takes the Docker Registry Name, Username, and Password to be able to push the Blazor Docker Container to the Registry.
+Both GitHub Actions takes the Docker Registry Name, Username, and Password to be able to push the Blazor Docker Container to the Registry.
 
     REGISTRY_NAME
     REGISTRY_USERNAME
@@ -72,16 +72,17 @@ The Terraform script deploys a single Resource Group, an Azure FrontDoor for eac
 `registry_name`
 `tag_name`
 
-`geographies` is the variable used for specifying which geographies and which regions you want to deploy to.
+`geographies` is the variable used for specifying which geographies and which regions you want to deploy to. It also takes any custom tags name allowing for custom docker containers to be deployed to specific regions.
 
     default = {
         GeographyId = {
-        name = "GeographyName"
-        regions = {
-            RegionId1 = { name = "Region 1 Name", shortname = "r1" }
-            RegionId2 = { name = "Region 2 Name", shortname = "r2" }
+            name = "GeographyName"
+            regions = {
+                RegionId1 = { name = "Region 1 Name", shortname = "r1", tag = "" }
+                RegionId2 = { name = "Region 2 Name", shortname = "r2", tag = "customImage" }
+            }
         }
-        }
+    }
 
 The `geographies` variable is also flatten to a local variable `allregions` that lists all regions without the geographies information. As the geography information is only required for deploying the Azure FrontDoor load balancers.
 
