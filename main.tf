@@ -35,23 +35,23 @@ resource "azurerm_app_service_plan" "asp" {
   }
 }
 
-resource "azurerm_virtual_network" "vnet" {
-  for_each            = { for region in local.allregions : region.region_key => region }
-  name                = "${var.resource_prefix}-${each.value.shortname}-vnet"
-  location            = each.value.name
-  resource_group_name = azurerm_resource_group.rg.name
-  address_space       = ["10.1.1.0/24"]
-}
+# resource "azurerm_virtual_network" "vnet" {
+#   for_each            = { for region in local.allregions : region.region_key => region }
+#   name                = "${var.resource_prefix}-${each.value.shortname}-vnet"
+#   location            = each.value.name
+#   resource_group_name = azurerm_resource_group.rg.name
+#   address_space       = ["10.1.1.0/24"]
+# }
 
-resource "azurerm_subnet" "internal" {
-  for_each             = { for region in local.allregions : region.region_key => region }
-  name                 = "internal"
-  resource_group_name  = azurerm_resource_group.rg.name
-  virtual_network_name = azurerm_virtual_network.vnet[each.key].name
-  address_prefixes     = ["10.1.1.0/24"]
-  service_endpoints    = ["Microsoft.Storage"]
-  depends_on           = [azurerm_virtual_network.vnet]
-}
+# resource "azurerm_subnet" "internal" {
+#   for_each             = { for region in local.allregions : region.region_key => region }
+#   name                 = "internal"
+#   resource_group_name  = azurerm_resource_group.rg.name
+#   virtual_network_name = azurerm_virtual_network.vnet[each.key].name
+#   address_prefixes     = ["10.1.1.0/24"]
+#   service_endpoints    = ["Microsoft.Storage"]
+#   depends_on           = [azurerm_virtual_network.vnet]
+# }
 
 # Provision the Azure Storage Account 
 resource "azurerm_storage_account" "storage" {
@@ -63,7 +63,7 @@ resource "azurerm_storage_account" "storage" {
   account_tier             = "Standard"
   account_replication_type = "GRS"
   min_tls_version          = "TLS1_2"
-  #   allow_blob_public_access = false
+  allow_blob_public_access = false
 
   #   network_rules {
   #     default_action             = "Deny"
