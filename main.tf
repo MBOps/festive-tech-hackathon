@@ -1,4 +1,16 @@
-# Deploy sample app on Azure App Services in a standalone manner, no database required.
+locals {
+  allregions = flatten([
+    for geo_key, geo in var.geographies : [
+      for region_key, region in geo.regions : {
+        region_key = region_key
+        name       = region.name
+        shortname  = region.shortname
+      }
+    ]
+
+  ])
+}
+
 terraform {
   backend "azurerm" {
     resource_group_name  = "Terraform"
@@ -7,14 +19,14 @@ terraform {
     key                  = "festive.terraform.tfstate"
   }
 }
-# Configure the AzureRM provider (using v2.1)
+
 provider "azurerm" {
   version         = ">=2.39.0"
   subscription_id = var.subscription_id
   features {}
 }
 
-# Provision a resource group to hold all Azure resources
+
 resource "azurerm_resource_group" "rg" {
   name     = "${var.resource_prefix}-rg"
   location = var.rglocation
@@ -72,7 +84,7 @@ resource "azurerm_storage_account" "storage" {
   #depends_on = [azurerm_subnet.internal]
 }
 
-# # Provision the Azure FrontDoor
+# Provision the Azure FrontDoor
 resource "azurerm_frontdoor" "frontdoor" {
   for_each                                     = var.geographies #{ for geo in var.geos : geo.name => geo }
   name                                         = "${var.resource_prefix}-${each.key}-frontdoor"
@@ -112,47 +124,9 @@ resource "azurerm_frontdoor" "frontdoor" {
       }
     }
 
-    # backend {
-    #   host_header = "${var.resource_prefix}-${each.key}.azurewebsites.net"
-    #   address     = "${var.resource_prefix}-${each.key}.azurewebsites.net"
-    #   http_port   = 80
-    #   https_port  = 443
-    # }
-
     load_balancing_name = "${var.resource_prefix}-${each.key}-LoadBalancingSettings1"
     health_probe_name   = "${var.resource_prefix}-${each.key}-HealthProbeSetting1"
   }
-
-  #   dynamic "backend_pool" {
-  #     #for_each = var.geos
-  #     for_each = { for geo in var.geos2 : geo.geo_id => geo }
-  #     content {
-  #       name                = "${var.resource_prefix}-${backend_pool.key}-Backend"
-  #       load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
-  #       health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
-
-  #       #   dynamic "backend" {
-  #       #     #for_each = backend_pool.value.regions
-  #       #     for_each = { for region in backend_pool.value.regions : region.region_key => region }
-  #       #     content {
-  #       #       host_header = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
-  #       #       address     = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
-  #       #       http_port   = 80
-  #       #       https_port  = 443
-  #       #     }
-  #       #   }
-  #       backend {
-  #         #for_each = backend_pool.value.regions
-  #         #for_each = { for region in backend_pool.value.regions : region.region_key => region }
-  #         #content {
-  #         host_header = "${var.resource_prefix}-${backend_pool.value.geo_id}.azurewebsites.net"
-  #         address     = "${var.resource_prefix}-${backend_pool.value.geo_id}.azurewebsites.net"
-  #         http_port   = 80
-  #         https_port  = 443
-  #         #}
-  #       }
-  #     }
-  #   }
 
   frontend_endpoint {
     name                              = "${var.resource_prefix}-${each.key}-FrontendEndpoint1"
@@ -161,49 +135,6 @@ resource "azurerm_frontdoor" "frontdoor" {
   }
   depends_on = [azurerm_app_service.webapp]
 }
-
-locals {
-  #distinctregions = distinct([for region in var.regions : region])
-  #allregions = flatten(var.geos)
-
-  allregions = flatten([
-    for geo_key, geo in var.geographies : [
-      for region_key, region in geo.regions : {
-        region_key = region_key
-        name       = region.name
-        shortname  = region.shortname
-      }
-    ]
-
-  ])
-
-  #   allregions2 = flatten([
-  #     for geo_id, geo in var.geos2 : [
-  #       for region_id, region in geo.regions : region
-  #     ]
-
-  #   ])
-}
-
-# output "instance_ip_addr" {
-#   value = var.geos2
-# }
-
-# output "instance_ip_addr2" {
-#   value = var.geos
-# }
-
-# output "instance_ip_addr3" {
-#   value = var.regions
-# }
-
-# output "instance_ip_addr4" {
-#   value = local.allregions
-# }
-
-# output "instance_ip_addr5" {
-#   value = local.allregions2
-# }
 
 resource "azurerm_app_service" "webapp" {
   for_each            = { for region in local.allregions : region.region_key => region }
@@ -221,7 +152,6 @@ resource "azurerm_app_service" "webapp" {
     DOCKER_REGISTRY_SERVER_URL      = "https://${var.registry_name}"
     DOCKER_REGISTRY_SERVER_USERNAME = "${var.admin_username}"
     DOCKER_REGISTRY_SERVER_PASSWORD = "${var.admin_password}"
-    # APPINSIGHTS_INSTRUMENTATIONKEY = "${azurerm_application_insights.appinsights.instrumentation_key}"
   }
 
   # Configure Docker Image to load on start
@@ -242,13 +172,6 @@ resource "azurerm_app_service" "webapp" {
 #   app_service_id = azurerm_app_service.webapp[each.key].id
 #   subnet_id      = azurerm_subnet.internal[each.key].id
 #   depends_on     = [azurerm_subnet.internal, azurerm_app_service.webapp]
-# }
-
-# resource "azurerm_application_insights" "appinsights" {
-#   name                = "${var.resource_prefix}-appinsights"
-#   location            = azurerm_resource_group.rg.location
-#   resource_group_name = azurerm_resource_group.rg.name
-#   application_type    = "web"
 # }
 
 resource "azurerm_monitor_autoscale_setting" "autoscaling" {
