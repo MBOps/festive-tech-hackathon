@@ -6,7 +6,7 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 RUN git clone https://github.com/MBOps/festive-tech-santa-wishlist.git
 WORKDIR /festive-tech-santa-wishlist
-RUN git checkout -b testing
+RUN git checkout -b $BRANCH
 RUN dotnet restore "SantaWishList.csproj"
 COPY . .
 RUN dotnet build "SantaWishList.csproj" -c Release -o /app/build
