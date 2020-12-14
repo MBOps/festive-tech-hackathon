@@ -31,7 +31,7 @@ jobs:
 
       - run: |
           docker build . -t ${{ secrets.REGISTRY_NAME }}/festive-tech:latest
-          docker push ${{ secrets.REGISTRY_USERNAME }}/festive-tech:latest
+          docker push ${{ secrets.REGISTRY_NAME }}/festive-tech:latest
 
 # docker build . -t ${{ secrets.REGISTRY_NAME }}.azurecr.io/festive-tech:${{ github.sha }}
 # docker push ${{ secrets.REGISTRY_USERNAME }}.azurecr.io/festive-tech:${{ github.sha }}

@@ -80,3 +80,16 @@ The Terraform script deploys a single Resource Group, an Azure FrontDoor for eac
 
 The `geographies` variable is also flatten to a local variable `allregions` that lists all regions without the geographies information. As the geography information is only required for deploying the Azure FrontDoor load balancers.
 
+### Infrastructure Deployed
+
+#### App Service Plan
+
+The Terraform script deploys a Standard S1 App Service Plan running on Linux into each region. Along with this basic configuration I also deploy auto-scaling rules for each App Service plan. The Service plan will scale up an additional instance if the CPU usage is kept above 75% for 5 minutes, and will then scale down again when usage is below 25% for 5 minutes.
+
+These scaling actions will alert subscription administrators and co-administrators via email when activated.
+
+#### Storage Account
+#### WebApp
+
+Once App Service Plans and Storage Accounts are deployed the script will deploy the WebApps. It includes the connection strings to storage accounts deployed for each region, and is configured to access the Docker Container Registry to deploy the previously build Docker image using the `latest` tag.
+#### FrontDoor
