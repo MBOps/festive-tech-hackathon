@@ -29,5 +29,5 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - run: |
-          docker build . -f Dockerfile -t ${{ secrets.REGISTRY_NAME }}/festive-tech:${GITHUB_REF##*/}
+          docker build . -f Dockerfile -t ${{ secrets.REGISTRY_NAME }}/festive-tech:${GITHUB_REF##*/} --build-arg BRANCH=main
           docker push ${{ secrets.REGISTRY_NAME }}/festive-tech:${GITHUB_REF##*/}
