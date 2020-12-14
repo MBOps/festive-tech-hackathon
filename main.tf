@@ -137,8 +137,8 @@ resource "azurerm_frontdoor" "frontdoor" {
         #for_each = backend_pool.value.regions
         #for_each = { for region in backend_pool.value.regions : region.region_key => region }
         #content {
-        host_header = "${var.resource_prefix}-${[backend_pool.value.geo_id]}.azurewebsites.net"
-        address     = "${var.resource_prefix}-${[backend_pool.value.geo_id]}.azurewebsites.net"
+        host_header = "${var.resource_prefix}-${backend_pool.value.geo_id}.azurewebsites.net"
+        address     = "${var.resource_prefix}-${backend_pool.value.geo_id}.azurewebsites.net"
         http_port   = 80
         https_port  = 443
         #}
