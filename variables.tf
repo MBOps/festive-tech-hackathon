@@ -48,7 +48,7 @@ variable "repo_url" {
 variable "geos" {
   default = {
     eu = {
-      name = "eu"
+      name = "Europe"
       regions = {
         eu-west = { name = "West Europe", shortname = "euw" }
         #eu-north = { name = "North Europe", shortname = "eun" }
