@@ -33,7 +33,7 @@ variable "geographies" {
       name = "Europe"
       regions = {
         eu-west  = { name = "West Europe", shortname = "euw", tag = "" }
-        eu-north = { name = "North Europe", shortname = "eun", tag = "v1" }
+        eu-north = { name = "North Europe", shortname = "eun", tag = "testing" }
       }
     }
     # uk = {
