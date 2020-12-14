@@ -1,11 +1,7 @@
 locals {
   allregions = flatten([
     for geo_key, geo in var.geographies : [
-      for region_key, region in geo.regions : {
-        region_key = region_key
-        name       = region.name
-        shortname  = region.shortname
-      }
+      for region_key, region in geo.regions : region
     ]
 
   ])
@@ -156,7 +152,7 @@ resource "azurerm_app_service" "webapp" {
 
   # Configure Docker Image to load on start
   site_config {
-    linux_fx_version = "DOCKER|${var.registry_name}/festive-tech:${lookup([each.value], "tag", "default")}"
+    linux_fx_version = "DOCKER|${var.registry_name}/festive-tech:${each.value.tag != "" ? each.value.tag : var.tag_name}"
     always_on        = "true"
   }
 
