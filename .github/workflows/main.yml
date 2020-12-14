@@ -1,11 +1,10 @@
 
-name: 'Terraform, Build and Deploy'
+name: 'Docker Build and Push, Terraform Deploy from Main'
 
 on:
   push:
     branches:
     - main
-  pull_request:
 
 env:
   ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
