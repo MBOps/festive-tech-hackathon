@@ -73,86 +73,94 @@ resource "azurerm_storage_account" "storage" {
 }
 
 # # Provision the Azure FrontDoor
-# resource "azurerm_frontdoor" "frontdoor" {
-#   name                                         = "${var.resource_prefix}-frontdoor"
-#   resource_group_name                          = azurerm_resource_group.rg.name
-#   enforce_backend_pools_certificate_name_check = false
+resource "azurerm_frontdoor" "frontdoor" {
+  for_each                                     = { for geo in var.geos2 : geo.geo_id => geo }
+  name                                         = "${var.resource_prefix}-${backend_pool.key}-frontdoor"
+  resource_group_name                          = azurerm_resource_group.rg.name
+  enforce_backend_pools_certificate_name_check = false
 
-#   routing_rule {
-#     name               = "${var.resource_prefix}-RoutingRule1"
-#     accepted_protocols = ["Http", "Https"]
-#     patterns_to_match  = ["/*"]
-#     frontend_endpoints = ["${var.resource_prefix}-FrontendEndpoint1"]
-#     forwarding_configuration {
-#       forwarding_protocol = "MatchRequest"
-#       backend_pool_name   = "${var.resource_prefix}-Backend"
-#     }
-#   }
+  routing_rule {
+    name               = "${var.resource_prefix}-${backend_pool.key}-RoutingRule1"
+    accepted_protocols = ["Http", "Https"]
+    patterns_to_match  = ["/*"]
+    frontend_endpoints = ["${var.resource_prefix}-${backend_pool.key}-FrontendEndpoint1"]
+    forwarding_configuration {
+      forwarding_protocol = "MatchRequest"
+      backend_pool_name   = "${var.resource_prefix}-${backend_pool.key}-Backend"
+    }
+  }
 
-#   backend_pool_load_balancing {
-#     name = "${var.resource_prefix}-LoadBalancingSettings1"
-#   }
+  backend_pool_load_balancing {
+    name = "${var.resource_prefix}-${backend_pool.key}-LoadBalancingSettings1"
+  }
 
-#   backend_pool_health_probe {
-#     name = "${var.resource_prefix}-HealthProbeSetting1"
-#   }
+  backend_pool_health_probe {
+    name = "${var.resource_prefix}-${backend_pool.key}-HealthProbeSetting1"
+  }
 
-#   #   backend_pool {
-#   #     name = "${var.resource_prefix}-Backend"
+  backend_pool {
+    name = "${var.resource_prefix}-${backend_pool.key}-Backend"
 
-#   #     # dynamic "backend" {
-#   #     #   for_each = local.regions
+    # dynamic "backend" {
+    #   for_each = local.regions
 
-#   #     #   content {
-#   #     #     host_header = "${var.resource_prefix}-${[backend.value]}.azurewebsites.net"
-#   #     #     address     = "${var.resource_prefix}-${[backend.value]}.azurewebsites.net"
-#   #     #     http_port   = 80
-#   #     #     https_port  = 443
-#   #     #   }
-#   #     # }
+    #   content {
+    #     host_header = "${var.resource_prefix}-${[backend.value]}.azurewebsites.net"
+    #     address     = "${var.resource_prefix}-${[backend.value]}.azurewebsites.net"
+    #     http_port   = 80
+    #     https_port  = 443
+    #   }
+    # }
 
-#   #     load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
-#   #     health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
-#   #   }
+    backend {
+      host_header = "${var.resource_prefix}-${backend_pool.key}.azurewebsites.net"
+      address     = "${var.resource_prefix}-${backend_pool.key}.azurewebsites.net"
+      http_port   = 80
+      https_port  = 443
+    }
 
-#   dynamic "backend_pool" {
-#     #for_each = var.geos
-#     for_each = { for geo in var.geos2 : geo.geo_id => geo }
-#     content {
-#       name                = "${var.resource_prefix}-${backend_pool.key}-Backend"
-#       load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
-#       health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
+    load_balancing_name = "${var.resource_prefix}-${backend_pool.key}-LoadBalancingSettings1"
+    health_probe_name   = "${var.resource_prefix}-${backend_pool.key}-HealthProbeSetting1"
+  }
 
-#       #   dynamic "backend" {
-#       #     #for_each = backend_pool.value.regions
-#       #     for_each = { for region in backend_pool.value.regions : region.region_key => region }
-#       #     content {
-#       #       host_header = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
-#       #       address     = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
-#       #       http_port   = 80
-#       #       https_port  = 443
-#       #     }
-#       #   }
-#       backend {
-#         #for_each = backend_pool.value.regions
-#         #for_each = { for region in backend_pool.value.regions : region.region_key => region }
-#         #content {
-#         host_header = "${var.resource_prefix}-${backend_pool.value.geo_id}.azurewebsites.net"
-#         address     = "${var.resource_prefix}-${backend_pool.value.geo_id}.azurewebsites.net"
-#         http_port   = 80
-#         https_port  = 443
-#         #}
-#       }
-#     }
-#   }
+  #   dynamic "backend_pool" {
+  #     #for_each = var.geos
+  #     for_each = { for geo in var.geos2 : geo.geo_id => geo }
+  #     content {
+  #       name                = "${var.resource_prefix}-${backend_pool.key}-Backend"
+  #       load_balancing_name = "${var.resource_prefix}-LoadBalancingSettings1"
+  #       health_probe_name   = "${var.resource_prefix}-HealthProbeSetting1"
 
-#   frontend_endpoint {
-#     name                              = "${var.resource_prefix}-FrontendEndpoint1"
-#     host_name                         = "${var.resource_prefix}-frontdoor.azurefd.net"
-#     custom_https_provisioning_enabled = false
-#   }
-#   depends_on = [azurerm_app_service.webapp]
-# }
+  #       #   dynamic "backend" {
+  #       #     #for_each = backend_pool.value.regions
+  #       #     for_each = { for region in backend_pool.value.regions : region.region_key => region }
+  #       #     content {
+  #       #       host_header = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
+  #       #       address     = "${azurerm_app_service.webapp[backend.key].name}.azurewebsites.net"
+  #       #       http_port   = 80
+  #       #       https_port  = 443
+  #       #     }
+  #       #   }
+  #       backend {
+  #         #for_each = backend_pool.value.regions
+  #         #for_each = { for region in backend_pool.value.regions : region.region_key => region }
+  #         #content {
+  #         host_header = "${var.resource_prefix}-${backend_pool.value.geo_id}.azurewebsites.net"
+  #         address     = "${var.resource_prefix}-${backend_pool.value.geo_id}.azurewebsites.net"
+  #         http_port   = 80
+  #         https_port  = 443
+  #         #}
+  #       }
+  #     }
+  #   }
+
+  frontend_endpoint {
+    name                              = "${var.resource_prefix}-${backend_pool.key}-FrontendEndpoint1"
+    host_name                         = "${var.resource_prefix}-${backend_pool.key}-frontdoor.azurefd.net"
+    custom_https_provisioning_enabled = false
+  }
+  depends_on = [azurerm_app_service.webapp]
+}
 
 locals {
   #distinctregions = distinct([for region in var.regions : region])
@@ -177,25 +185,25 @@ locals {
   ])
 }
 
-output "instance_ip_addr" {
-  value = var.geos2
-}
+# output "instance_ip_addr" {
+#   value = var.geos2
+# }
 
-output "instance_ip_addr2" {
-  value = var.geos
-}
+# output "instance_ip_addr2" {
+#   value = var.geos
+# }
 
-output "instance_ip_addr3" {
-  value = var.regions
-}
+# output "instance_ip_addr3" {
+#   value = var.regions
+# }
 
-output "instance_ip_addr4" {
-  value = local.allregions
-}
+# output "instance_ip_addr4" {
+#   value = local.allregions
+# }
 
-output "instance_ip_addr5" {
-  value = local.allregions2
-}
+# output "instance_ip_addr5" {
+#   value = local.allregions2
+# }
 
 resource "azurerm_app_service" "webapp" {
   for_each            = { for region in local.allregions : region.region_key => region }
