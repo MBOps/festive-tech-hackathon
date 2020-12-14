@@ -50,134 +50,134 @@ variable "geos" {
     eu = {
       name = "eu"
       regions = {
-        eu-west  = { name = "West Europe", shortname = "euw" }
-        eu-north = { name = "North Europe", shortname = "eun" }
+        eu-west = { name = "West Europe", shortname = "euw" }
+        #eu-north = { name = "North Europe", shortname = "eun" }
       }
     }
-    uk = {
-      name = "uk"
-      regions = {
-        uk-south = { name = "UK South", shortname = "uks" }
-        uk-west  = { name = "UK West", shortname = "ukw" }
-      }
-    }
-    us = {
-      name = "us"
-      regions = {
-        us-west          = { name = "West US", shortname = "uw" }
-        us-west-2        = { name = "West US 2", shortname = "uw2" }
-        us-central       = { name = "Central US", shortname = "uc" }
-        us-west-central  = { name = "West Central US", shortname = "uwc" }
-        us-south-central = { name = "South Central US", shortname = "usc" }
-        us-north-central = { name = "North Central US", shortname = "unc" }
-        us-east          = { name = "East US", shortname = "ue" }
-        us-east-2        = { name = "East US 2", shortname = "ue2" }
-      }
-    }
-    can = {
-      name = "can"
-      regions = {
-        can-central = { name = "Canada Central", shortname = "cac" }
-        can-east    = { name = "Canada East", shortname = "cae" }
-      }
-    }
-    bra = {
-      name = "bra"
-      regions = {
-        bra-south = { name = "Brazil South", shortname = "brs" }
-        #bra-south-east   = { name = "Brazil Southeast", shortname = "brse" }
-      }
-    }
-    fr = {
-      name = "fr"
-      regions = {
-        fr-central = { name = "France Central", shortname = "frc" }
-        #fr-south         = { name = "France South", shortname = "frs" }
-      }
-    }
-    ger = {
-      name = "ger"
-      regions = {
-        ger-west-central = { name = "Germany West Central", shortname = "gwc" }
-        #ger-north-east   = { name = "Germany Northeast", shortname = "gne" }
-        #ger-central      = { name = "Germany Central", shortname = "gce" }
-      }
-    }
-    swz = {
-      name = "swz"
-      regions = {
-        swz-north = { name = "Switzerland North", shortname = "swn" }
-        #swz-west         = { name = "Switzerland West", shortname = "sww" }
-      }
-    }
-    norw = {
-      name = "norw"
-      regions = {
-        norw-east = { name = "Norway East", shortname = "noe" }
-        #norw-west        = { name = "Norway West", shortname = "now" }
-      }
-    }
-    saf = {
-      name = "saf"
-      regions = {
-        saf-north = { name = "South Africa North", shortname = "san" }
-        #saf-west         = { name = "South Africa West", shortname = "saw" }
-      }
-    }
-    ind = {
-      name = "ind"
-      regions = {
-        ind-west    = { name = "West India", shortname = "inw" }
-        ind-central = { name = "Central India", shortname = "inc" }
-        ind-south   = { name = "South India", shortname = "ins" }
-      }
-    }
-    asia = {
-      name = "asia"
-      regions = {
-        asia-south-east = { name = "Southeast Asia", shortname = "ase" }
-        asia-east       = { name = "East Asia", shortname = "ae" }
-      }
-    }
-    kor = {
-      name = "kor"
-      regions = {
-        kor-central = { name = "Korea Central", shortname = "krc" }
-        kor-south   = { name = "Korea South", shortname = "krs" }
-      }
-    }
-    jap = {
-      name = "jap"
-      regions = {
-        jap-east = { name = "Japan East", shortname = "jpe" }
-        jap-west = { name = "Japan West", shortname = "jpw" }
-      }
-    }
-    aus = {
-      name = "aus"
-      regions = {
-        aus-central    = { name = "Australia Central", shortname = "auc" }
-        aus-east       = { name = "Australia East", shortname = "aue" }
-        aus-south-east = { name = "Australia Southeast", shortname = "ause" }
-        #aus-central-2    = { name = "Australia Central 2", shortname = "auc2" }
-      }
-    }
-    uae = {
-      name = "uae"
-      regions = {
-        uae-north = { name = "UAE North", shortname = "uaen" }
-        #uae-central      = { name = "UAE Central" , shortname = "uaec" }
-      }
-    }
-    #     ch = {
-    #   name = "ch"
+    # uk = {
+    #   name = "uk"
     #   regions = {
-    #     ch-north         = { name = "China North", shortname = "chn" }
-    #     ch-east          = { name = "China East", shortname = "che" }
-    #     ch-north-2       = { name = "China North 2", shortname = "chn2" }
-    #     ch-east-2        = { name = "China East 2", shortname = "che2" }
+    #     uk-south = { name = "UK South", shortname = "uks" }
+    #     uk-west  = { name = "UK West", shortname = "ukw" }
     #   }
     # }
+    # us = {
+    #   name = "us"
+    #   regions = {
+    #     us-west          = { name = "West US", shortname = "uw" }
+    #     us-west-2        = { name = "West US 2", shortname = "uw2" }
+    #     us-central       = { name = "Central US", shortname = "uc" }
+    #     us-west-central  = { name = "West Central US", shortname = "uwc" }
+    #     us-south-central = { name = "South Central US", shortname = "usc" }
+    #     us-north-central = { name = "North Central US", shortname = "unc" }
+    #     us-east          = { name = "East US", shortname = "ue" }
+    #     us-east-2        = { name = "East US 2", shortname = "ue2" }
+    #   }
+    # }
+    # can = {
+    #   name = "can"
+    #   regions = {
+    #     can-central = { name = "Canada Central", shortname = "cac" }
+    #     can-east    = { name = "Canada East", shortname = "cae" }
+    #   }
+    # }
+    # bra = {
+    #   name = "bra"
+    #   regions = {
+    #     bra-south = { name = "Brazil South", shortname = "brs" }
+    #     #bra-south-east   = { name = "Brazil Southeast", shortname = "brse" }
+    #   }
+    # }
+    # fr = {
+    #   name = "fr"
+    #   regions = {
+    #     fr-central = { name = "France Central", shortname = "frc" }
+    #     #fr-south         = { name = "France South", shortname = "frs" }
+    #   }
+    # }
+    # ger = {
+    #   name = "ger"
+    #   regions = {
+    #     ger-west-central = { name = "Germany West Central", shortname = "gwc" }
+    #     #ger-north-east   = { name = "Germany Northeast", shortname = "gne" }
+    #     #ger-central      = { name = "Germany Central", shortname = "gce" }
+    #   }
+    # }
+    # swz = {
+    #   name = "swz"
+    #   regions = {
+    #     swz-north = { name = "Switzerland North", shortname = "swn" }
+    #     #swz-west         = { name = "Switzerland West", shortname = "sww" }
+    #   }
+    # }
+    # norw = {
+    #   name = "norw"
+    #   regions = {
+    #     norw-east = { name = "Norway East", shortname = "noe" }
+    #     #norw-west        = { name = "Norway West", shortname = "now" }
+    #   }
+    # }
+    # saf = {
+    #   name = "saf"
+    #   regions = {
+    #     saf-north = { name = "South Africa North", shortname = "san" }
+    #     #saf-west         = { name = "South Africa West", shortname = "saw" }
+    #   }
+    # }
+    # ind = {
+    #   name = "ind"
+    #   regions = {
+    #     ind-west    = { name = "West India", shortname = "inw" }
+    #     ind-central = { name = "Central India", shortname = "inc" }
+    #     ind-south   = { name = "South India", shortname = "ins" }
+    #   }
+    # }
+    # asia = {
+    #   name = "asia"
+    #   regions = {
+    #     asia-south-east = { name = "Southeast Asia", shortname = "ase" }
+    #     asia-east       = { name = "East Asia", shortname = "ae" }
+    #   }
+    # }
+    # kor = {
+    #   name = "kor"
+    #   regions = {
+    #     kor-central = { name = "Korea Central", shortname = "krc" }
+    #     kor-south   = { name = "Korea South", shortname = "krs" }
+    #   }
+    # }
+    # jap = {
+    #   name = "jap"
+    #   regions = {
+    #     jap-east = { name = "Japan East", shortname = "jpe" }
+    #     jap-west = { name = "Japan West", shortname = "jpw" }
+    #   }
+    # }
+    # aus = {
+    #   name = "aus"
+    #   regions = {
+    #     aus-central    = { name = "Australia Central", shortname = "auc" }
+    #     aus-east       = { name = "Australia East", shortname = "aue" }
+    #     aus-south-east = { name = "Australia Southeast", shortname = "ause" }
+    #     #aus-central-2    = { name = "Australia Central 2", shortname = "auc2" }
+    #   }
+    # }
+    # uae = {
+    #   name = "uae"
+    #   regions = {
+    #     uae-north = { name = "UAE North", shortname = "uaen" }
+    #     #uae-central      = { name = "UAE Central" , shortname = "uaec" }
+    #   }
+    # }
+    # #     ch = {
+    # #   name = "ch"
+    # #   regions = {
+    # #     ch-north         = { name = "China North", shortname = "chn" }
+    # #     ch-east          = { name = "China East", shortname = "che" }
+    # #     ch-north-2       = { name = "China North 2", shortname = "chn2" }
+    # #     ch-east-2        = { name = "China East 2", shortname = "che2" }
+    # #   }
+    # # }
 
   }
 
