@@ -45,7 +45,7 @@ variable "repo_url" {
 #   }
 # }
 
-variable "geos" {
+variable "geographies" {
   default = {
     eu = {
       name = "Europe"
@@ -55,14 +55,14 @@ variable "geos" {
       }
     }
     # uk = {
-    #   name = "uk"
+    #   name = "United Kingdom"
     #   regions = {
     #     uk-south = { name = "UK South", shortname = "uks" }
     #     uk-west  = { name = "UK West", shortname = "ukw" }
     #   }
     # }
     # us = {
-    #   name = "us"
+    #   name = "United States"
     #   regions = {
     #     us-west          = { name = "West US", shortname = "uw" }
     #     us-west-2        = { name = "West US 2", shortname = "uw2" }
@@ -75,28 +75,28 @@ variable "geos" {
     #   }
     # }
     # can = {
-    #   name = "can"
+    #   name = "Canada"
     #   regions = {
     #     can-central = { name = "Canada Central", shortname = "cac" }
     #     can-east    = { name = "Canada East", shortname = "cae" }
     #   }
     # }
     # bra = {
-    #   name = "bra"
+    #   name = "Brazil"
     #   regions = {
     #     bra-south = { name = "Brazil South", shortname = "brs" }
     #     #bra-south-east   = { name = "Brazil Southeast", shortname = "brse" }
     #   }
     # }
     # fr = {
-    #   name = "fr"
+    #   name = "France"
     #   regions = {
     #     fr-central = { name = "France Central", shortname = "frc" }
     #     #fr-south         = { name = "France South", shortname = "frs" }
     #   }
     # }
     # ger = {
-    #   name = "ger"
+    #   name = "Germany"
     #   regions = {
     #     ger-west-central = { name = "Germany West Central", shortname = "gwc" }
     #     #ger-north-east   = { name = "Germany Northeast", shortname = "gne" }
@@ -104,28 +104,28 @@ variable "geos" {
     #   }
     # }
     # swz = {
-    #   name = "swz"
+    #   name = "Switzerland"
     #   regions = {
     #     swz-north = { name = "Switzerland North", shortname = "swn" }
     #     #swz-west         = { name = "Switzerland West", shortname = "sww" }
     #   }
     # }
     # norw = {
-    #   name = "norw"
+    #   name = "Norway"
     #   regions = {
     #     norw-east = { name = "Norway East", shortname = "noe" }
     #     #norw-west        = { name = "Norway West", shortname = "now" }
     #   }
     # }
     # saf = {
-    #   name = "saf"
+    #   name = "South Africa"
     #   regions = {
     #     saf-north = { name = "South Africa North", shortname = "san" }
     #     #saf-west         = { name = "South Africa West", shortname = "saw" }
     #   }
     # }
     # ind = {
-    #   name = "ind"
+    #   name = "India"
     #   regions = {
     #     ind-west    = { name = "West India", shortname = "inw" }
     #     ind-central = { name = "Central India", shortname = "inc" }
@@ -133,28 +133,28 @@ variable "geos" {
     #   }
     # }
     # asia = {
-    #   name = "asia"
+    #   name = "Asia"
     #   regions = {
     #     asia-south-east = { name = "Southeast Asia", shortname = "ase" }
     #     asia-east       = { name = "East Asia", shortname = "ae" }
     #   }
     # }
     # kor = {
-    #   name = "kor"
+    #   name = "Korea"
     #   regions = {
     #     kor-central = { name = "Korea Central", shortname = "krc" }
     #     kor-south   = { name = "Korea South", shortname = "krs" }
     #   }
     # }
     # jap = {
-    #   name = "jap"
+    #   name = "Japan"
     #   regions = {
     #     jap-east = { name = "Japan East", shortname = "jpe" }
     #     jap-west = { name = "Japan West", shortname = "jpw" }
     #   }
     # }
     # aus = {
-    #   name = "aus"
+    #   name = "Australia"
     #   regions = {
     #     aus-central    = { name = "Australia Central", shortname = "auc" }
     #     aus-east       = { name = "Australia East", shortname = "aue" }
@@ -163,14 +163,14 @@ variable "geos" {
     #   }
     # }
     # uae = {
-    #   name = "uae"
+    #   name = "UAE"
     #   regions = {
     #     uae-north = { name = "UAE North", shortname = "uaen" }
     #     #uae-central      = { name = "UAE Central" , shortname = "uaec" }
     #   }
     # }
     # #     ch = {
-    # #   name = "ch"
+    # #   name = "China"
     # #   regions = {
     # #     ch-north         = { name = "China North", shortname = "chn" }
     # #     ch-east          = { name = "China East", shortname = "che" }

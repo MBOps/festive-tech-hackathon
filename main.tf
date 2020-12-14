@@ -74,7 +74,7 @@ resource "azurerm_storage_account" "storage" {
 
 # # Provision the Azure FrontDoor
 resource "azurerm_frontdoor" "frontdoor" {
-  for_each                                     = { for geo in var.geos : geo.name => geo }
+  for_each                                     = var.geographies #{ for geo in var.geos : geo.name => geo }
   name                                         = "${var.resource_prefix}-${each.key}-frontdoor"
   resource_group_name                          = azurerm_resource_group.rg.name
   enforce_backend_pools_certificate_name_check = false
@@ -167,7 +167,7 @@ locals {
   #allregions = flatten(var.geos)
 
   allregions = flatten([
-    for geo_key, geo in var.geos : [
+    for geo_key, geo in var.geographies : [
       for region_key, region in geo.regions : {
         region_key = region_key
         name       = region.name
