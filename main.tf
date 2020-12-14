@@ -5,6 +5,7 @@ locals {
         region_key = region_key
         name       = region.name
         shortname  = region.shortname
+        tag        = region.tag
       }
     ]
 
