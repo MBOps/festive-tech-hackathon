@@ -31,7 +31,7 @@ jobs:
 
       - run: |
           docker build . -t ${{ secrets.REGISTRY_NAME }}/festive-tech:v1
-          docker push ${{ secrets.REGISTRY_NAME }}/festive-tech:v1
+          docker push ${{ secrets.REGISTRY_NAME }}/festive-tech
 
   terraform:
     name: 'Terraform'
