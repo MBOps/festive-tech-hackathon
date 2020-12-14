@@ -30,8 +30,8 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - run: |
-          docker build . -t ${{ secrets.REGISTRY_NAME }}/festive-tech:latest
-          docker push ${{ secrets.REGISTRY_NAME }}/festive-tech:latest
+          docker build . -t ${{ secrets.REGISTRY_NAME }}/festive-tech:v1
+          docker push ${{ secrets.REGISTRY_NAME }}/festive-tech:v1
 
   terraform:
     name: 'Terraform'
