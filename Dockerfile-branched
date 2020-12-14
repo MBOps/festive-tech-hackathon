@@ -5,6 +5,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 RUN git clone https://github.com/whaakman/festive-tech-santa-wishlist.git
+RUN git checkout -b main
 WORKDIR /festive-tech-santa-wishlist
 RUN dotnet restore "SantaWishList.csproj"
 COPY . .
