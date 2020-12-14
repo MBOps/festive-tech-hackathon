@@ -62,6 +62,7 @@ variable "geos" {
       }
     }
   }
+
 }
 
 variable "geos2" {
