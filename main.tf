@@ -39,12 +39,11 @@ resource "azurerm_app_service_plan" "asp" {
   name                = "${var.resource_prefix}-${each.value.shortname}-asp"
   location            = each.value.name
   resource_group_name = azurerm_resource_group.rg.name
-  #   kind                = "Windows"
   kind     = "Linux"
   reserved = true
   sku {
-    tier = "Premium"
-    size = "P1V2"
+    tier = "Standard"
+    size = "S1"
   }
 }
 

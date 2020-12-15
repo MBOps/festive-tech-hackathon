@@ -92,7 +92,7 @@ The `geographies` variable is also flatten to a local variable `allregions` that
 
 #### App Service Plan
 
-The Terraform script deploys a Standard S1 App Service Plan running on Linux into each region. Along with this basic configuration I also deploy auto-scaling rules for each App Service plan. The Service plan will scale up an additional instance if the CPU usage is kept above 75% for 5 minutes, and will then scale down again when usage is below 25% for 5 minutes. The ASP starts with a single instance deployed but can scale up to 10 instances in a given region.
+The Terraform script deploys a Standard S1 App Service Plan running on Linux into each region. (The Tier and Size can be changed in the script depending if production requirements need increased additional compute resources). Along with this basic configuration I also deploy auto-scaling rules for each App Service plan. The Service plan will scale up an additional instance if the CPU usage is kept above 75% for 5 minutes, and will then scale down again when usage is below 25% for 5 minutes. The ASP starts with a single instance deployed but can scale up to 10 instances in a given region this is restricted by the Standard tier and could also increased.
 
 These scaling actions will alert subscription administrators and co-administrators via email when activated.
 
@@ -102,18 +102,20 @@ The Storage Account is deployed using GRS to ensure resilience to region outage,
 
 #### WebApp
 
-Once App Service Plans and Storage Accounts are deployed the script will deploy the WebApps. It includes the connection strings to storage accounts deployed for each region, and is configured to access the Docker Container Registry to deploy the previously build Docker image using the `latest` tag.
+Once App Service Plans and Storage Accounts are deployed the script will deploy the WebApps. It includes the connection strings to storage accounts deployed for each region, and is configured to access the Docker Container Registry to deploy the previously build Docker image using the default tag, unless there is a custom tag specified in the specific regions.
 
 #### FrontDoor
 
-To conform with the compliance I have deployed FrontDoor load balancers for each geography ie US / Germany etc, these allow for a single domain name but can load balancer across multiple deployed WebApps.
+I have also decided to deploy FrontDoor resources to run as a Load Balancer, initially I deployed a single FrontDoor resource for all regions, but I felt this did not solve the compliance requirements, as the load balancer uses latency to determine the nearest deployment, whilst this works the majority of the time it is not guaranteed to route to a compliant deployment. I.e. latency to Europe North and Europe West maybe lower than to country specific regions UK South or West Central Germany. Therefore I decided to deploy a FrontDoor resource within each geography to ensure compliance.
 
 ### Known Restrictions
 
-**Application Insights**
+#### Application Insights
+
 I looked into deploying Application Insights for monitoring purposes, but using the WebApp for Containers configuration, it would deploy the native monitoring without the SDK, therefore additional instrumentation of the code could be needed to enhance the system further at a later date. But as this meant potential changes to the codebase of the Web site.
 
-**Network & Routing**
+#### Network & Routing
+
 I wanted to restrict routing to Microsoft networks and minimise the expose of the Storage Account to the internet, to ensure increased security. I planned to deploy an VNet into each region and use VNet Integration and the Storage Account Endpoint to ensure all access to the Storage Account was down via the VNet. This did not work, as I was unable to configure the VNet integration using Terraform. (Commands have been commented out). If I had time I planned to rectify this by deploying a small AzureCLI script that could run as part of the GitHub Action, but I ran out of time.
 
 ### Outstanding Work
