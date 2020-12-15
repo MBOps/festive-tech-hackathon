@@ -160,8 +160,8 @@ resource "azurerm_app_service" "webapp" {
   # Do not attach Storage by default
   app_settings = {
     WEBSITES_ENABLE_APP_SERVICE_STORAGE = false
-    "storageContainerName" = "${var.resource_prefix}-${each.value.shortname}"
-    "connectionString"     = "${azurerm_storage_account.storage[each.key].primary_connection_string}"
+    "storageContainerName"              = "${var.resource_prefix}-${each.value.shortname}"
+    "connectionString"                  = "${azurerm_storage_account.storage[each.key].primary_connection_string}"
 
     # Settings for private Container Registires  
     DOCKER_REGISTRY_SERVER_URL      = "https://${var.registry_name}"
