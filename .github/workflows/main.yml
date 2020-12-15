@@ -29,8 +29,8 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - run: |
-          docker build . -t ${{ secrets.REGISTRY_NAME }}/festive-tech:default
-          docker push ${{ secrets.REGISTRY_NAME }}/festive-tech:default
+          docker build . -t ${{ secrets.REGISTRY_NAME }}/festive-tech:${{ secrets.DEFAULT_CONTAINER }}
+          docker push ${{ secrets.REGISTRY_NAME }}/festive-tech:${{ secrets.DEFAULT_CONTAINER }}
 
   terraform:
     name: 'Terraform'
@@ -63,12 +63,12 @@ jobs:
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
-      run: terraform plan -var="subscription_id=${{ secrets.SUBSCRIPTION_ID }}" -var="admin_username=${{ secrets.REGISTRY_USERNAME }}" -var="admin_password=${{ secrets.REGISTRY_PASSWORD }}" -var="registry_name=${{ secrets.REGISTRY_NAME }}" -var="tag_name=default"
+      run: terraform plan -var="subscription_id=${{ secrets.SUBSCRIPTION_ID }}" -var="admin_username=${{ secrets.REGISTRY_USERNAME }}" -var="admin_password=${{ secrets.REGISTRY_PASSWORD }}" -var="registry_name=${{ secrets.REGISTRY_NAME }}" -var="tag_name=${{ secrets.DEFAULT_CONTAINER }}"
 
       # On push to master, build or change infrastructure according to Terraform configuration files
       # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: terraform apply -auto-approve -var="subscription_id=${{ secrets.SUBSCRIPTION_ID }}" -var="admin_username=${{ secrets.REGISTRY_USERNAME }}" -var="admin_password=${{ secrets.REGISTRY_PASSWORD }}" -var="registry_name=${{ secrets.REGISTRY_NAME }}" -var="tag_name=default"
+      run: terraform apply -auto-approve -var="subscription_id=${{ secrets.SUBSCRIPTION_ID }}" -var="admin_username=${{ secrets.REGISTRY_USERNAME }}" -var="admin_password=${{ secrets.REGISTRY_PASSWORD }}" -var="registry_name=${{ secrets.REGISTRY_NAME }}" -var="tag_name=${{ secrets.DEFAULT_CONTAINER }}"
 
   

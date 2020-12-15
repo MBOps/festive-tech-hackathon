@@ -113,3 +113,5 @@ To conform with the compliance I have deployed FrontDoor load balancers for each
 **Storage Account scaling** - I would deploy additional Azure Automation scripts to deploy additional WebApp / StorageAccount configurations as needed when alerting from StorageAccount latency / error-codes.
 
 **Web App Scaling** Modify Web App to use Premium for additional scaling / deploying additional S1 level WebApps when scaling to specific levels.
+
+**Continueous Deployment**
