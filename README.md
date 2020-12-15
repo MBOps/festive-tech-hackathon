@@ -29,7 +29,13 @@ The solution proposed uses GitHub Actions and Terraform to deploy the Infrastruc
 
 ### GitHub Actions
 
-There are two GitHub Action YAML files. The main file `main.yml` contains two jobs. This creates and pushes a docker image to an Azure Container Registry, and then runs Terraform to deploy the infrastructure. The second YAML file is a secondary build process `branched.yml`, it creates a docker container and pushes it to the container registry tagged with the git branch name. This will allow customisations to the code base to be built.
+There are two GitHub Action YAML files. The main file `main.yml` contains two jobs. This creates and pushes a docker image to an Azure Container Registry, and then runs Terraform to deploy the infrastructure. The second YAML file is a secondary build process `branched.yml`, it creates a docker container and pushes it to the container registry tagged with the git branch name. This is to for custom code to be built and deployed used custom image tags.
+
+Ideally the Docker build step would sit with the source code and run on commits to the source code rather than with the infrastructure code. But for ease of use and to ensure the code I am building is up to date, I have tied the docker build steps to the terraform infrastructure deployment and just clone the base repo in the Dockerfile.
+
+The `branched.yml` build step uses the branch name for the container tag, the `main.yml` file uses a GitHub secret to supply the default container tag.
+
+    DEFAULT_CONTAINER
 
 There are a number of secrets needed for the GitHub Actions to run. The Terraform script is run in AzureCLI and requires a Service Principal User to be created and the various ID's and Secret to be kept within the repo settings.
 
@@ -38,7 +44,7 @@ There are a number of secrets needed for the GitHub Actions to run. The Terrafor
     SUBSCRIPTION_ID
     TENANT_ID
 
-Both GitHub Actions takes the Docker Registry Name, Username, and Password to be able to push the Blazor Docker Container to the Registry.
+Both pipelines push docker containers to a Container registry, in my testing I used my ACR. Therefore there are three secrets for the Registry Name, Username, and Password which are used push the Blazor Docker Container to the Registry.
 
     REGISTRY_NAME
     REGISTRY_USERNAME
@@ -46,19 +52,13 @@ Both GitHub Actions takes the Docker Registry Name, Username, and Password to be
 
 ### Docker Build
 
-I decided to create a Docker image to simplify the deployment of the WebApp. Originally I had a GitHub action job that created the image and pushed to the WebApp. But I found this deployment method to be inconsistent. Therefore I decided to create and deploy a Docker image.
+I decided to create a Docker image to simplify the deployment of the WebApp. Originally I had a GitHub action job that created the image and pushed to the WebApp. But I found this deployment method to be inconsistent. Therefore I decided to create and deploy a Docker image. I am using a default tag rather than one generated during the build process, to allow for custom code to be deploy. With the terraform configuration there is scope for supplying container tags for custom images rather than the default tag.
 
-The GitHub Action, checks out the required DockerFile, logs into my Azure Container Registry, and then does a docker build and push.
-
-The DockerFile uses the .Net Core 5.0 images as a base, checks out the code from the festive-tech-santa-wishlist GitHub repo, build and publishes the website and copies the resulting build artifacts into the final release image.
-
-I also wanted to deploy Application Insights for monitoring, but using Containers does not allow the native monitoring without the SDK, therefore additional instrumentation of the code could be needed to enhance the system further at a later date.
+The GitHub Action, checks out the required DockerFile, logs into my Azure Container Registry, and runs the docker build and push.The DockerFile uses the .Net Core 5.0 images as a base, checks out the code from the festive-tech-santa-wishlist GitHub repo, build and publishes the website and copies the resulting build artifacts into the final release image.
 
 ### Terraform Deploy
 
-The Terraform job runs to deploy the Terraform defined in the terraform files. (main.tf, variables.tf)
-
-The Terraform script deploys a single Resource Group, an Azure FrontDoor for each Geography, and then an Azure WebApp, Azure Storage into each Region.
+The Terraform job runs to deploy the Terraform defined in the terraform files. (main.tf, variables.tf). The Terraform script is designed to deploy a single Resource Group for all resources to be deployed into, an Azure FrontDoor for each Geography, and then an Azure WebApp, Azure Storage into each Region.
 
 #### Terraform Variables
 
@@ -72,7 +72,9 @@ The Terraform script deploys a single Resource Group, an Azure FrontDoor for eac
 `registry_name`
 `tag_name`
 
-`geographies` is the variable used for specifying which geographies and which regions you want to deploy to. It also takes any custom tags name allowing for custom docker containers to be deployed to specific regions.
+The above variables are used for accessing the container registry, and is passed in via GitHub secrets and `--var` commands in the `terraform plan` and `terraform apply` steps os the GitHub Action.
+
+`geographies` is the variable used for specifying which geographies and regions you want to deploy to. Any custom container tags can be specified within this variable too, this will be used in the terraform script to customise deployments to specific regions.
 
     default = {
         GeographyId = {
@@ -84,7 +86,7 @@ The Terraform script deploys a single Resource Group, an Azure FrontDoor for eac
         }
     }
 
-The `geographies` variable is also flatten to a local variable `allregions` that lists all regions without the geographies information. As the geography information is only required for deploying the Azure FrontDoor load balancers.
+The `geographies` variable is also flatten to a local variable `allregions` that lists all regions without the geographies information to be used during some of the for_each loops. This is due to the geography information is only required for deploying the Azure FrontDoor load balancers.
 
 ### Infrastructure Deployed
 
@@ -106,12 +108,20 @@ Once App Service Plans and Storage Accounts are deployed the script will deploy 
 
 To conform with the compliance I have deployed FrontDoor load balancers for each geography ie US / Germany etc, these allow for a single domain name but can load balancer across multiple deployed WebApps.
 
-#### Additional Work
+### Additional Work
 
 **Custom Domains** are not deployed but could be added to the geographies variable to allow additional customisation of the web apps.
 
-**Storage Account scaling** - I would deploy additional Azure Automation scripts to deploy additional WebApp / StorageAccount configurations as needed when alerting from StorageAccount latency / error-codes.
+**Storage Account scaling** I would deploy additional Azure Automation scripts to deploy additional WebApp / StorageAccount configurations as needed when alerting from StorageAccount latency / error-codes.
 
 **Web App Scaling** Modify Web App to use Premium for additional scaling / deploying additional S1 level WebApps when scaling to specific levels.
 
-**Continueous Deployment**
+**Continuous Deployment** Currently the Docker containers are not re-pushed when updated in the container registry. There is a setting within the Containers for Continuous Deployment but 
+
+### Known Restrictions
+
+**Application Insights**
+I looked into deploying Application Insights for monitoring purposes, but using the WebApp for Containers configuration, it would deploy the native monitoring without the SDK, therefore additional instrumentation of the code could be needed to enhance the system further at a later date. But as this meant potential changes to the codebase of the Web site.
+
+**Network & Routing**
+I wanted to restrict routing to Microsoft networks and minimise the expose of the Storage Account to the internet, to ensure increased security. I planned to deploy an VNet into each region and use VNet Integration and the Storage Account Endpoint to ensure all access to the Storage Account was down via the VNet. This did not work, as I was unable to configure the VNet integration using Terraform. (Commands have been commented out). If I had time I planned to rectify this by deploying a small AzureCLI script that could run as part of the GitHub Action, but I ran out of time.
