@@ -88,7 +88,7 @@ The above variables are used for accessing the container registry, and is passed
 
 The `geographies` variable is also flatten to a local variable `allregions` that lists all regions without the geographies information to be used during some of the for_each loops. This is due to the geography information is only required for deploying the Azure FrontDoor load balancers.
 
-### Infrastructure Deployed
+### Deployed Infrastructure
 
 #### App Service Plan
 
@@ -108,7 +108,15 @@ Once App Service Plans and Storage Accounts are deployed the script will deploy 
 
 To conform with the compliance I have deployed FrontDoor load balancers for each geography ie US / Germany etc, these allow for a single domain name but can load balancer across multiple deployed WebApps.
 
-### Additional Work
+### Known Restrictions
+
+**Application Insights**
+I looked into deploying Application Insights for monitoring purposes, but using the WebApp for Containers configuration, it would deploy the native monitoring without the SDK, therefore additional instrumentation of the code could be needed to enhance the system further at a later date. But as this meant potential changes to the codebase of the Web site.
+
+**Network & Routing**
+I wanted to restrict routing to Microsoft networks and minimise the expose of the Storage Account to the internet, to ensure increased security. I planned to deploy an VNet into each region and use VNet Integration and the Storage Account Endpoint to ensure all access to the Storage Account was down via the VNet. This did not work, as I was unable to configure the VNet integration using Terraform. (Commands have been commented out). If I had time I planned to rectify this by deploying a small AzureCLI script that could run as part of the GitHub Action, but I ran out of time.
+
+### Outstanding Work
 
 **Custom Domains** are not deployed but could be added to the geographies variable to allow additional customisation of the web apps.
 
@@ -117,11 +125,3 @@ To conform with the compliance I have deployed FrontDoor load balancers for each
 **Web App Scaling** Modify Web App to use Premium for additional scaling / deploying additional S1 level WebApps when scaling to specific levels.
 
 **Continuous Deployment** Currently the Docker containers are not re-pushed when updated in the container registry. There is a setting within the Containers for Continuous Deployment but 
-
-### Known Restrictions
-
-**Application Insights**
-I looked into deploying Application Insights for monitoring purposes, but using the WebApp for Containers configuration, it would deploy the native monitoring without the SDK, therefore additional instrumentation of the code could be needed to enhance the system further at a later date. But as this meant potential changes to the codebase of the Web site.
-
-**Network & Routing**
-I wanted to restrict routing to Microsoft networks and minimise the expose of the Storage Account to the internet, to ensure increased security. I planned to deploy an VNet into each region and use VNet Integration and the Storage Account Endpoint to ensure all access to the Storage Account was down via the VNet. This did not work, as I was unable to configure the VNet integration using Terraform. (Commands have been commented out). If I had time I planned to rectify this by deploying a small AzureCLI script that could run as part of the GitHub Action, but I ran out of time.
