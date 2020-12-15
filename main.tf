@@ -43,8 +43,8 @@ resource "azurerm_app_service_plan" "asp" {
   kind     = "Linux"
   reserved = true
   sku {
-    tier = "Standard"
-    size = "S1"
+    tier = "Premium"
+    size = "P1V2"
   }
 }
 
@@ -77,12 +77,11 @@ resource "azurerm_storage_account" "storage" {
   account_replication_type = "GRS"
   min_tls_version          = "TLS1_2"
   allow_blob_public_access = false
-
-  #   network_rules {
-  #     default_action             = "Deny"
-  #     virtual_network_subnet_ids = [azurerm_subnet.internal[each.key].id]
-  #   }
-  #depends_on = [azurerm_subnet.internal]
+  network_rules {
+    default_action             = "Deny"
+    virtual_network_subnet_ids = [azurerm_subnet.internal[each.key].id]
+  }
+  depends_on = [azurerm_subnet.internal]
 }
 
 # Provision the Azure FrontDoor
