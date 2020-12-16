@@ -32,7 +32,7 @@ resource "azurerm_resource_group" "rg" {
   name     = "${var.resource_prefix}-rg"
   location = var.rglocation
 
-  tags {
+  tags = {
     environment = "Production"
     project     = var.resource_prefix
     region      = var.rglocation
@@ -53,7 +53,7 @@ resource "azurerm_app_service_plan" "asp" {
     size = "S1"
   }
 
-  tags {
+  tags = {
     environment = "Production"
     project     = var.resource_prefix
     region      = each.value.name
@@ -132,7 +132,7 @@ resource "azurerm_monitor_autoscale_setting" "autoscaling" {
 #   location            = each.value.name
 #   resource_group_name = azurerm_resource_group.rg.name
 #   address_space       = ["10.1.1.0/24"]
-#   tags {
+#   tags = {
 #     environment = "Production"
 #     project     = var.resource_prefix
 #     region      = each.value.name
@@ -165,7 +165,7 @@ resource "azurerm_storage_account" "storage" {
   #     virtual_network_subnet_ids = [azurerm_subnet.internal[each.key].id]
   #   }
 
-  tags {
+  tags = {
     environment = "Production"
     project     = var.resource_prefix
     region      = each.value.name
@@ -203,7 +203,7 @@ resource "azurerm_app_service" "webapp" {
     type = "SystemAssigned"
   }
 
-  tags {
+  tags = {
     environment = "Production"
     project     = var.resource_prefix
     region      = each.value.name
@@ -262,7 +262,7 @@ resource "azurerm_frontdoor" "frontdoor" {
   }
   depends_on = [azurerm_app_service.webapp]
 
-  tags {
+  tags = {
     environment = "Production"
     project     = var.resource_prefix
     region      = each.value.name
