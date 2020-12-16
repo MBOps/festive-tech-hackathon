@@ -31,6 +31,13 @@ provider "azurerm" {
 resource "azurerm_resource_group" "rg" {
   name     = "${var.resource_prefix}-rg"
   location = var.rglocation
+
+  tags {
+    environment = "Production"
+    project     = var.resource_prefix
+    region      = var.rglocation
+  }
+
 }
 
 # Provision the App Service plan to host the App Service web app in each region
@@ -44,6 +51,12 @@ resource "azurerm_app_service_plan" "asp" {
   sku {
     tier = "Standard"
     size = "S1"
+  }
+
+  tags {
+    environment = "Production"
+    project     = var.resource_prefix
+    region      = each.value.name
   }
 }
 
@@ -119,6 +132,11 @@ resource "azurerm_monitor_autoscale_setting" "autoscaling" {
 #   location            = each.value.name
 #   resource_group_name = azurerm_resource_group.rg.name
 #   address_space       = ["10.1.1.0/24"]
+#   tags {
+#     environment = "Production"
+#     project     = var.resource_prefix
+#     region      = each.value.name
+#   }
 # }
 
 # resource "azurerm_subnet" "internal" {
@@ -146,6 +164,13 @@ resource "azurerm_storage_account" "storage" {
   #     default_action             = "Deny"
   #     virtual_network_subnet_ids = [azurerm_subnet.internal[each.key].id]
   #   }
+
+  tags {
+    environment = "Production"
+    project     = var.resource_prefix
+    region      = each.value.name
+  }
+
   #   depends_on = [azurerm_subnet.internal]
 }
 
@@ -176,6 +201,12 @@ resource "azurerm_app_service" "webapp" {
 
   identity {
     type = "SystemAssigned"
+  }
+
+  tags {
+    environment = "Production"
+    project     = var.resource_prefix
+    region      = each.value.name
   }
 
   depends_on = [azurerm_storage_account.storage, azurerm_app_service_plan.asp]
@@ -230,6 +261,12 @@ resource "azurerm_frontdoor" "frontdoor" {
     custom_https_provisioning_enabled = false
   }
   depends_on = [azurerm_app_service.webapp]
+
+  tags {
+    environment = "Production"
+    project     = var.resource_prefix
+    region      = each.value.name
+  }
 }
 
 # resource "azurerm_app_service_virtual_network_swift_connection" "vnetconnection" {
