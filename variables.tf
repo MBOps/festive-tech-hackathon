@@ -5,7 +5,7 @@ variable "resource_prefix" {
 
 variable "rglocation" {
   description = "The Azure location for the Resource Group"
-  default     = "northeurope"
+  default     = "North Europe"
 }
 
 variable "subscription_id" {
