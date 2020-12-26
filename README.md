@@ -1,5 +1,7 @@
 # Azure Festive Tech Calendar Hackathon
 
+Submitted version branched to `Submission` branch
+
 ## The Problem
 
 The website needs to be published around the world. Even though they have written the code, they are not sure about the best way to deploy and scale this. During initial testing with Santa’s helpers around the world they quickly ran into performance challenges as well as compliance requirements.
